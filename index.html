@@ -367,7 +367,7 @@ function canEndTurn(){return s.movedAction||!canMoveAnyPiece()}
 function endTurn(){if(s.phase!=='play')return;if(!canEndTurn()){s.message='自分の駒を最低1回動かしてからターンを終了してください。';render();return;}if(s.mode==='compress'){s.message='廃棄の選択を完了してください。';render();return}s.combo=null;let p=player();p.discard.push(...p.hand.splice(0));for(let piece of s.board)if(piece?.p===s.turn)delete piece.shield;clearSelection();p.coins+=5;log(pname(s.turn)+' ターン終了基本収入 +5金');playSE('coin');shopEffect();s.phase='turnShop';showShopCutin();s.shopTab='action';s.buySelected=null;s.message=pname(s.turn)+' の購入フェイズです。＋5金を獲得しました。買い物を終えたら相手のターンへ。';log(pname(s.turn)+' のターン終了・購入フェイズ');render()}
 function finishRound(winner){playSE(s.round===1?'applause':'win');miniEffect('第'+s.round+'局 終了！','victory');s.combo=null;if(s.phase==='play'){player().coins+=5;log(pname(s.turn)+' ターン終了基本収入 +5金')}s.gameWinner=winner;clearSelection();if(s.round===2){s.phase='finished';s.message=winner===null?'第2局は引き分け。勝者なし。':'第2局の勝者 '+pname(winner)+' がこのゲームの勝者です！';log(s.message);render();return;}s.firstWinner=winner;s.players.forEach((p,i)=>{p.survivors=s.board.map((x,index)=>x&&x.p===i&&x.t!=='K'?{t:x.t,from:index}:null).filter(Boolean);p.roster=['K',...p.survivors.map(x=>x.t)]});s.phase='shop';s.players.forEach(p=>{p.doneShop=false});log(winner===null?'ラウンド'+s.round+'：引き分け':'ラウンド'+s.round+'：'+pname(winner)+' の勝利');s.message='ラウンド終了。両者の買い物が終わったら次へ。';render()}
 function buy(id,kind){if(!['shop','turnShop','bonus'].includes(s.phase))return;if(s.phase==='turnShop')player().doneShop=false;if(player().doneShop)return;let price=kind==='bundle'?4:kind==='sparrow'?14:kind==='piece'?pieceDefs[id].price:cardDefs[id].price;if(s.phase==='bonus'){if(s.firstWinner!==s.turn)return;price=0;}if(player().coins<price||(kind==='card'&&!forSaleCard(id,cardDefs[id])))return;player().coins-=price;if(guideStep>=0)guidePurchaseCount++;if(kind==='bundle'||kind==='sparrow'){player().discard.push(id);s.message=(id==='bundle'?'棒銀セット':'雀刺しセット')+'を捨て札に追加しました。';}else if(kind==='piece'){player().discard.push('piece:'+id);s.message=pieceDefs[id].name+'の駒カードを捨て札に追加しました。手札に引いたら1エナジーで配置できます。'}else player().discard.push(id);log(pname(s.turn)+' が '+(kind==='bundle'?'棒銀セット':kind==='sparrow'?'セット':kind==='piece'?pieceDefs[id].name:cardDefs[id].name)+' を'+price+'金で購入');playSE('purchase');shopEffect();if(s.phase==='bonus'){startSecondMatch();return;}render()}
-function shopDone(){playSE('purchase');if(s.phase==='turnShop'){log(pname(s.turn)+' 買い物完了');nextTurn();return}player().doneShop=true;log(pname(s.turn)+' 買い物完了');if(s.players.every(p=>p.doneShop)){if(s.round===1&&s.firstWinner!==null){s.phase='bonus';s.turn=s.firstWinner;s.players[s.turn].doneShop=false;s.shopTab='action';s.message='第1局勝者ボーナス：ショップから好きなカードを1枚無料で選んでください。';render();return;}startSecondMatch();return;}else{s.turn=1-s.turn}render()}
+function shopDone(){playSE('purchase');if(s.phase==='turnShop'){log(pname(s.turn)+' 買い物完了');nextTurn();flushOnlineSync();return}player().doneShop=true;log(pname(s.turn)+' 買い物完了');if(s.players.every(p=>p.doneShop)){if(s.round===1&&s.firstWinner!==null){s.phase='bonus';s.turn=s.firstWinner;s.players[s.turn].doneShop=false;s.shopTab='action';s.message='第1局勝者ボーナス：ショップから好きなカードを1枚無料で選んでください。';render();return;}startSecondMatch();return;}else{s.turn=1-s.turn}render()}
 function startSecondMatch(){
  playSE('gong');miniEffect('第2局 開始！','gong');
  s.round=2;s.phase='deploy';s.secondFirst=s.firstWinner===null?0:1-s.firstWinner;s.turn=s.secondFirst;s.board=Array(27).fill(null);s.traps=[];s.turnSerial=0;
@@ -519,18 +519,20 @@ document.addEventListener('click',e=>{if(e.target.closest('.cardhelp')){showFloa
 // オンラインモード：サーバーが部屋を管理し、手番側の操作結果を同期する。
 let onlineActive=false,onlineReceiving=false,onlineRole=-1,onlineSocket=null,onlineRoom='',onlineLastSent='',onlineSyncTimer=null,onlinePeers=0,onlineAuthorityTurn=0;
 function onlineStatus(t){document.getElementById('onlineStatus').textContent=t}
+function flushOnlineSync(){
+ if(!onlineActive||onlineReceiving||onlinePeers!==2||onlineRole!==onlineAuthorityTurn||!onlineSocket||onlineSocket.readyState!==1)return;
+ clearTimeout(onlineSyncTimer);
+ const value=JSON.stringify(s);
+ if(value===onlineLastSent)return;
+ onlineLastSent=value;
+ onlineSocket.send(JSON.stringify({type:'state',state:s}));
+ onlineAuthorityTurn=s.turn;
+ updateOnlineBar();
+}
 function queueOnlineSync(){
  if(onlineReceiving||!onlineActive||onlineRole!==onlineAuthorityTurn||onlinePeers!==2)return;
  clearTimeout(onlineSyncTimer);
- onlineSyncTimer=setTimeout(()=>{
-  if(!onlineSocket||onlineSocket.readyState!==1||onlineReceiving||onlineRole!==onlineAuthorityTurn)return;
-  const value=JSON.stringify(s);
-  if(value===onlineLastSent)return;
-  onlineLastSent=value;
-  onlineAuthorityTurn=s.turn;
-  onlineSocket.send(JSON.stringify({type:'state',state:s}));
-  updateOnlineBar();
- },65);
+ onlineSyncTimer=setTimeout(flushOnlineSync,65);
 }
 function updateOnlineBar(){
  document.getElementById('copyInvite').classList.toggle('hidden',!onlineActive);
