@@ -517,17 +517,19 @@ document.addEventListener('focusout',e=>{if(e.target.closest('.cardhelp'))floati
 document.addEventListener('click',e=>{if(e.target.closest('.cardhelp')){showFloatingHelp(e.target.closest('.cardhelp'));e.stopPropagation()}else floatingHelp.classList.add('hidden')});
 
 // オンラインモード：サーバーが部屋を管理し、手番側の操作結果を同期する。
-let onlineActive=false,onlineReceiving=false,onlineRole=-1,onlineSocket=null,onlineRoom='',onlineLastSent='',onlineSyncTimer=null,onlinePeers=0;
+let onlineActive=false,onlineReceiving=false,onlineRole=-1,onlineSocket=null,onlineRoom='',onlineLastSent='',onlineSyncTimer=null,onlinePeers=0,onlineAuthorityTurn=0;
 function onlineStatus(t){document.getElementById('onlineStatus').textContent=t}
 function queueOnlineSync(){
- if(onlineReceiving||!onlineActive||onlineRole!==s.turn||onlinePeers!==2)return;
+ if(onlineReceiving||!onlineActive||onlineRole!==onlineAuthorityTurn||onlinePeers!==2)return;
  clearTimeout(onlineSyncTimer);
  onlineSyncTimer=setTimeout(()=>{
-  if(!onlineSocket||onlineSocket.readyState!==1||onlineReceiving)return;
+  if(!onlineSocket||onlineSocket.readyState!==1||onlineReceiving||onlineRole!==onlineAuthorityTurn)return;
   const value=JSON.stringify(s);
   if(value===onlineLastSent)return;
   onlineLastSent=value;
+  onlineAuthorityTurn=s.turn;
   onlineSocket.send(JSON.stringify({type:'state',state:s}));
+  updateOnlineBar();
  },65);
 }
 function updateOnlineBar(){
@@ -542,19 +544,19 @@ function onlineConnect(code){
  if(onlineSocket)onlineSocket.close();
  const proto=location.protocol==='https:'?'wss:':'ws:';
  const ws=new WebSocket(proto+'//'+location.host+'/ws');
- onlineSocket=ws;onlineRoom=code;onlineActive=true;onlineRole=-1;onlinePeers=0;
+ onlineSocket=ws;onlineRoom=code;onlineActive=true;onlineRole=-1;onlinePeers=0;onlineAuthorityTurn=0;
  onlineStatus('接続中…');
  ws.onopen=()=>ws.send(JSON.stringify({type:'join',room:code}));
  ws.onmessage=e=>{
   let m;try{m=JSON.parse(e.data)}catch{return}
   if(m.type==='welcome'){
    onlineRole=m.role;onlinePeers=m.peers;
-   if(m.state){onlineReceiving=true;s=m.state;undoStack=[];render();onlineReceiving=false;onlineLastSent=JSON.stringify(s)}
+   if(m.state){onlineAuthorityTurn=m.state.turn;onlineReceiving=true;s=m.state;undoStack=[];render();onlineReceiving=false;onlineLastSent=JSON.stringify(s)}
    updateOnlineBar();
   }else if(m.type==='peers'){onlinePeers=m.peers;updateOnlineBar();if(onlineRole===0&&onlinePeers===2){onlineLastSent='';queueOnlineSync()}}
   else if(m.type==='state'){
    clearTimeout(onlineSyncTimer);
-   onlineReceiving=true;s=m.state;undoStack=[];hideDrawCutin();render();onlineReceiving=false;
+   onlineReceiving=true;onlineAuthorityTurn=m.state.turn;s=m.state;undoStack=[];hideDrawCutin();render();onlineReceiving=false;
    onlineLastSent=JSON.stringify(s);updateOnlineBar();
   }else if(m.type==='error'){alert(m.message);leaveOnlineRoom()}
  };
@@ -578,7 +580,7 @@ function copyOnlineInvite(){
 }
 function leaveOnlineRoom(){
  if(onlineSocket){let w=onlineSocket;onlineSocket=null;w.close()}
- onlineActive=false;onlineRole=-1;onlinePeers=0;onlineRoom='';onlineLastSent='';
+ onlineActive=false;onlineRole=-1;onlinePeers=0;onlineRoom='';onlineLastSent='';onlineAuthorityTurn=0;
  history.replaceState(null,'',location.pathname);onlineStatus('未接続（ローカル操作）');updateOnlineBar();
 }
 document.addEventListener('click',e=>{
