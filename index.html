@@ -1,0 +1,601 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>三道の切札｜一人回し版</title><style>
+:root{font-family:system-ui,-apple-system,'Noto Sans JP',sans-serif;color:#f3f0e9;background:#101820}*{box-sizing:border-box}body{margin:0}header{padding:16px 22px;background:#192a34;border-bottom:1px solid #34434c}h1{margin:0;font-size:23px}header small{color:#aebcc4}main{max-width:1250px;margin:auto;padding:18px;display:grid;grid-template-columns:minmax(270px,360px) minmax(310px,1fr) minmax(260px,340px);gap:16px}.panel{background:#1b2b34;border:1px solid #344854;border-radius:14px;padding:15px;min-width:0}h2{font-size:17px;margin:0 0 12px}.muted{color:#b2c3ca;font-size:13px}.pill{display:inline-block;border-radius:20px;padding:5px 10px;background:#314653;margin:3px;font-size:12px}button{font:inherit;cursor:pointer;color:#f4f6f5;background:#315e72;border:1px solid #51859a;border-radius:9px;padding:9px 11px}button:hover:not(:disabled){filter:brightness(1.17)}button:disabled{opacity:.37;cursor:not-allowed}.primary{background:#247b66;border-color:#42ae8c}.danger{background:#793f47;border-color:#a15a61}.ghost{background:#273a44}.full{width:100%;margin:5px 0}.board{display:grid;grid-template-columns:repeat(3,1fr);width:min(100%,355px);margin:12px auto;border:4px solid #b48d56;background:#b48d56;gap:2px;box-shadow:0 10px 24px #0005}.cell{aspect-ratio:1;background:#e8c996;border:0;border-radius:0;color:#35291e;padding:0;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative}.cell:nth-child(6n+1),.cell:nth-child(6n+3),.cell:nth-child(6n+5){background:#e4c28a}.cell:hover{filter:brightness(1.07)!important}.cell.selected{outline:4px solid #19a5a3;outline-offset:-4px}.cell.valid{box-shadow:inset 0 0 0 6px #20aa4b!important;background:#b4e6a7!important}.cell.valid:after{content:'●';position:absolute;right:5px;bottom:2px;color:#13845b;font-size:13px}.cell.shielded:before{content:'🛡';position:absolute;right:3px;top:2px;font-size:14px}.piece{font-weight:900;font-size:26px;line-height:1.1}.piece.p1{color:#1c5e77}.piece.p0{color:#a04136;transform:rotate(180deg)}.coords{font-size:10px;opacity:.5;position:absolute;top:2px;left:4px}.owner{font-size:10px;font-weight:bold}.cardlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.gamecard{position:relative;min-height:76px;text-align:left;background:#314653;border:2px solid #526a79;padding:9px}.gamecard strong{display:block;font-size:13px}.gamecard span{font-size:11px;color:#cfdee4}.cardhelp{position:absolute;right:5px;top:8px;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;background:#fff;color:#000;font-size:14px;font-weight:900;cursor:help;z-index:2}.cardhelp:hover:after,.cardhelp:focus:after{content:attr(data-help);position:absolute;right:-6px;top:24px;white-space:normal;text-align:left;width:215px;background:#fff7e8;color:#19252c;border:1px solid #c3a878;border-radius:8px;padding:10px;box-shadow:0 8px 24px #0008;font-size:12px;line-height:1.5;z-index:50;pointer-events:none}.energybar{background:#243f4b;border:1px solid #4b7688;padding:12px;border-radius:10px;margin-bottom:12px;font-weight:800;color:#ffe18a}.gamecard.active{border-color:#f7cc65;background:#63563a}.gamecard:disabled{opacity:.48}.goals{display:grid;gap:8px}.goal{padding:9px;border-radius:9px;background:#293d48;font-size:13px}.goal b{color:#f6d179}.storeitem{display:flex;align-items:center;justify-content:space-between;gap:6px;border-bottom:1px solid #3c5059;padding:7px 0;font-size:13px}.shophelp{position:relative;display:inline-grid;right:auto;top:auto;vertical-align:middle;margin-left:3px}.storeitem.setSeparator{margin-top:24px;border-top:2px solid #78939f;padding-top:16px}.storeitem button{white-space:nowrap;font-size:12px;padding:6px}.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.tabs button{font-size:12px}.tabs .on{background:#247b66}.log{max-height:190px;overflow:auto;background:#10212a;padding:10px;border-radius:8px;font-size:12px;line-height:1.6}.log div{border-bottom:1px solid #2b404c;padding:2px 0}.hidden{display:none!important}.status{background:#314b56;border-radius:8px;padding:9px;margin:10px 0;font-size:13px}.notice{border-left:3px solid #e0b75f;padding-left:10px;margin:10px 0;font-size:12px;color:#d6e1e3}.layoutcenter{text-align:center}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(max-width:1050px){main{grid-template-columns:1fr 1fr}.boardpanel{grid-column:1}}@media(max-width:700px){main{display:flex;flex-direction:column;padding:10px;gap:10px}.boardpanel{order:0}.leftpanel{order:1}.rightpanel{order:2}.board{width:min(100%,320px)}header{padding:12px}}
+#deckOverlay,#tutorialOverlay{position:fixed;inset:0;background:#000b;z-index:200;display:grid;place-items:center;padding:16px}.tutorialbox{width:min(560px,100%);max-height:90vh;overflow:auto;background:#213541;border:1px solid #6a91a0;border-radius:16px;padding:22px;box-shadow:0 20px 70px #000b}.tutorialtop,.tutorialbottom{display:flex;justify-content:space-between;align-items:center;gap:12px}.tutorialtop{margin-bottom:20px}.tutorialbottom{margin-top:20px}.tutorialbox p,.tutorialbox li{line-height:1.8}.tutorialbox h2{margin-top:14px}.tutorialbox .hint{background:#304a56;padding:12px;border-radius:10px;margin-top:12px}.turnbanner{font-size:23px;font-weight:900;text-align:center;border-radius:12px;padding:12px;margin-bottom:14px;border:2px solid}.redturn{background:#592b2b;color:#ffe2d7;border-color:#f57e73}.blueturn{background:#183e5c;color:#d7efff;border-color:#64b5ff}.owner{white-space:nowrap}#drawCutin{position:fixed;inset:0;z-index:180;display:flex;align-items:center;justify-content:center;background:rgba(3,10,18,.75);cursor:pointer;pointer-events:auto}#drawCutin.cutinAnimate .cutinInner{animation:drawAppear .45s cubic-bezier(.2,1.5,.3,1) both}.cutinInner{width:min(94vw,720px);padding:24px;background:linear-gradient(130deg,#22435a,#253c36);border:3px solid #e9cf77;border-radius:20px;box-shadow:0 0 60px #f3d58160;text-align:center}.cutinTitle{font-size:clamp(19px,4vw,30px);font-weight:900;color:#ffdc81;margin-bottom:20px}.cutinCards{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}.cutinCard{background:#f6e5c1;color:#26333d;border:2px solid #b58b40;border-radius:10px;padding:16px 8px;min-width:85px;max-width:120px;flex:1;font-weight:800;box-shadow:0 5px 15px #0007}.cutinNote{font-size:12px;margin-top:14px;color:#d8e5e9}@keyframes drawAppear{from{opacity:0;transform:translateY(-40px) scale(.8)}to{opacity:1;transform:translateY(0) scale(1)}}.gamecard.trashTarget{border-color:#ed6d62!important;box-shadow:0 0 0 2px #ed6d6266}.gamecard.swappedNew{border-color:#50d1a4!important;background:#2d6156!important}.gamecard.swappedNew:after{content:'交換で引いたカード';position:absolute;bottom:3px;right:5px;color:#c7ffdb;font-size:10px}
+.deckrow{display:flex;justify-content:space-between;gap:12px;padding:8px 5px;border-bottom:1px solid #45606d}.deckrow strong{white-space:nowrap}.deckrow .shophelp{position:relative!important;top:auto!important;right:auto!important;display:inline-grid!important;vertical-align:middle;margin-left:7px}.tutorialbox details{padding:12px 0}.tutorialbox summary{cursor:pointer;font-weight:700}
+#coachRestore{position:fixed;z-index:240;right:16px;bottom:16px;background:#203a49;border:2px solid #e9c875;box-shadow:0 8px 24px #0008}#tutorialCoach{position:fixed;z-index:240;right:16px;bottom:16px;width:min(380px,calc(100vw - 32px));background:#203a49;border:2px solid #e9c875;border-radius:16px;padding:16px;box-shadow:0 12px 45px #000b}
+.coachhead,.coachbuttons{display:flex;align-items:center;justify-content:space-between;gap:8px}.coachhead{font-size:13px;color:#f6db96}.coachtitle{font-size:19px;font-weight:900;margin:13px 0 8px}.coachbody{font-size:13px;line-height:1.75;color:#f1f4ef}.coachbuttons{margin-top:14px}.guideFocus{outline:3px solid #e9c875!important;outline-offset:4px;box-shadow:0 0 0 6px #e9c87533!important;position:relative}
+@media(max-width:700px){#tutorialCoach{right:8px;bottom:8px;width:calc(100vw - 16px);padding:12px;max-height:39vh;overflow:auto}.coachbody{font-size:12px}}
+
+.cardhelp:hover:after,.cardhelp:focus:after{content:none!important}
+#cardTooltip{position:fixed;z-index:9999;max-width:min(300px,calc(100vw - 24px));padding:12px 14px;background:#fff7e8;color:#19252c;border:1px solid #c3a878;border-radius:9px;box-shadow:0 10px 28px #0009;font-size:13px;line-height:1.6;white-space:normal;pointer-events:none}
+.deckrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #46606a}
+
+/* カード詳細ボタンを明瞭に */
+.cardhelp{background:#ffe08a!important;color:#080808!important;border:2px solid #090909!important;font-size:16px!important;font-weight:1000!important;box-shadow:0 0 0 1px #ffe08a,0 2px 5px #0008!important;text-shadow:none!important}
+.gamecard .cardhelp{top:8px!important;right:6px!important;line-height:16px!important;padding:0!important;align-items:center!important;justify-items:center!important}.shophelp{top:auto!important;right:auto!important}
+
+/* 購入フェイズのヘルプアイコンを商品名の行中央に固定 */
+.storeitem>span{display:block;min-width:0;line-height:1.45}
+.storeitem .shophelp{position:relative!important;display:inline-flex!important;vertical-align:middle!important;align-items:center!important;justify-content:center!important;top:0!important;right:auto!important;width:20px!important;height:20px!important;line-height:1!important;padding:0!important;margin:0 0 2px 5px!important;transform:none!important}
+
+.cell.owntrap{box-shadow:inset 0 0 0 2px #e9a14b}.trapMark{position:absolute;bottom:3px;right:4px;color:#a43a1e;font-size:16px;z-index:1}
+.shopPulse{animation:shopPulse .6s ease-out}@keyframes shopPulse{0%{box-shadow:0 0 0 0 #f5c25f99}100%{box-shadow:0 0 0 18px #f5c25f00}}
+.shopFloat{position:fixed;z-index:99999;right:8%;top:28%;color:#ffe391;font-size:25px;font-weight:900;text-shadow:0 2px 12px #000;pointer-events:none;animation:shopFloat .95s ease-out forwards}@keyframes shopFloat{to{transform:translateY(-70px) scale(1.12);opacity:0}}
+
+#tutorialLaunch:not(.tutorialVisited){background:linear-gradient(110deg,#a97917,#ffeb9c,#a97917);background-size:220% 100%;color:#201600;border:2px solid #ffe9a4;box-shadow:0 0 12px #ffe078,0 0 24px #e6bd48;animation:tutorialGlow 1.8s ease-in-out infinite}
+#tutorialLaunch.tutorialVisited{background:#555c63!important;color:#e2e2e2!important;border-color:#747b81!important;box-shadow:none!important}
+@keyframes tutorialGlow{0%,100%{background-position:0% 0%;box-shadow:0 0 10px #ffe078}50%{background-position:100% 0%;box-shadow:0 0 24px #ffdf68,0 0 38px #f2c44b}}
+
+.energyOld{text-decoration:line-through;text-decoration-thickness:3px;text-decoration-color:#ff6d67;color:#a9aab0}
+.cell.owntrap{animation:trapGlow 1.2s ease-in-out infinite;box-shadow:inset 0 0 0 3px #ef7044,0 0 14px #ef643e80!important}
+@keyframes trapGlow{50%{box-shadow:inset 0 0 0 5px #f4b84d,0 0 22px #e7673dbb}}
+.trapMark{font-size:13px!important;font-weight:900;background:#fff1b0dd;padding:2px;border-radius:5px}
+.miniCardEffect{position:fixed;z-index:99990;top:20%;left:50%;transform:translateX(-50%);padding:16px 26px;border:2px solid #ffd878;border-radius:12px;background:#193a47;color:#fff2a0;font-size:22px;font-weight:900;text-align:center;max-width:85vw;box-shadow:0 8px 32px #000b;pointer-events:none;animation:miniFlash 2.1s ease-out forwards}
+.miniCardEffect.damage,.miniCardEffect.gong,.miniCardEffect.victory{animation-duration:1.1s}
+.miniCardEffect.trash{color:#ffac9e;border-color:#e56857}.miniCardEffect.damage{color:#ff8888;border-color:#e56857}.miniCardEffect.gong,.miniCardEffect.victory{font-size:32px;color:#ffe7a3}
+@keyframes miniFlash{0%{opacity:0;transform:translate(-50%,25px) scale(.85)}20%{opacity:1;transform:translate(-50%,0) scale(1)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-30px) scale(1.08)}}
+#shopCutin{position:fixed;inset:0;display:grid;place-items:center;z-index:175;pointer-events:none;background:rgba(5,12,21,.28);animation:shopCurtain 1.8s ease-out forwards}
+#shopCutin>div{padding:26px 48px;border:3px solid #ffe6a0;border-radius:18px;background:linear-gradient(125deg,#204858,#18323d);font-size:clamp(26px,5vw,46px);font-weight:900;color:#ffe9a5;text-shadow:0 3px 15px #000;box-shadow:0 0 45px #f5d27688;animation:shopTitle 1.8s ease-out forwards}
+@keyframes shopCurtain{0%,65%{opacity:1}100%{opacity:0}}@keyframes shopTitle{0%{transform:scale(.7)}22%{transform:scale(1.07)}60%{transform:scale(1)}100%{transform:translateY(-20px) scale(1.03)}}
+ .cardSymbol{width:18px;height:18px;vertical-align:-4px;display:inline-block;flex:none;margin-right:5px;opacity:.95}
+.cardNameWithIcon{display:inline-flex;align-items:center;gap:2px}
+.deckrow .cardSymbol{width:16px;height:16px;vertical-align:-3px}
+.setCardSymbols{display:inline-flex;align-items:center;gap:2px;margin-right:4px}.setCardSymbols .cardSymbol{margin-right:0}.moveSymbol{width:22px;height:22px}.setCardSymbols .moveSymbol{width:19px;height:19px}
+ .boardMoveIcon{display:block;height:19px;line-height:19px;pointer-events:none;opacity:.82}
+.boardMoveIcon .moveSymbol{width:20px;height:20px;margin:0;vertical-align:top}
+.boardMoveIcon.redFacing .moveSymbol{transform:rotate(180deg)}
+.storeitem .cardNameWithIcon{white-space:nowrap}
+.storeitem .cardNameWithIcon .cardSymbol{width:19px;height:19px}
+/* 和風の筆文字風タイトル。本文の読みやすさは維持 */
+header h1{font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif CJK JP","Noto Serif JP",serif;font-size:clamp(26px,3vw,36px);font-weight:900;letter-spacing:.14em;color:#f6e2b5;text-shadow:1px 2px 0 #674329,0 3px 9px #0009;}
+@media(min-width:1060px){main{max-width:1480px;grid-template-columns:minmax(210px,270px) minmax(300px,1fr) minmax(350px,440px);align-items:start}.boardpanel{position:sticky;top:8px}.leftpanel .log{max-height:120px}.rightpanel{max-height:calc(100vh - 110px);overflow:auto}}.cardlist{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}.gamecard{min-height:145px;padding:14px 11px;background:linear-gradient(155deg,#526a72,#203d50);border:2px solid #c7aa69;border-radius:13px;box-shadow:0 5px 12px #0005}.gamecard strong{font-size:15px;padding-right:15px}.gamecard .cardSymbol{width:32px;height:32px}.gamecard span{font-size:12px}.gamecard .cardhelp{top:6px;right:6px}.cardlist .gamecard:hover{transform:translateY(-2px)}
+
+@media(min-width:1060px){main{max-width:1540px;grid-template-columns:minmax(190px,240px) minmax(330px,1fr) minmax(345px,430px);gap:12px}.board{width:min(100%,275px)!important}.gamecard{min-height:95px!important;padding:8px 8px!important}.cardlist{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px}.gamecard .cardSymbol{width:27px!important;height:27px!important}.rightpanel{max-height:calc(100vh - 90px);overflow:auto}}
+.guideFocus{outline:3px solid #ffe3a1!important;animation:guidePulse 0.75s ease-in-out 2!important}
+@keyframes guidePulse{0%,100%{box-shadow:0 0 0 3px #ffce5480,0 0 8px #f5c768}50%{box-shadow:0 0 0 8px #ffe17a50,0 0 26px #ffdb58}}
+.deckrow .shophelp{width:21px!important;height:21px!important;min-width:21px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;vertical-align:middle!important}
+.cycleDiagram{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0;padding:10px;background:#162b39;border-radius:10px;color:#ffe0a2;font-weight:bold}.cycleDiagram span{border:1px solid #cba45b;padding:4px 6px;border-radius:6px}
+.kingHelp{display:inline-grid;place-items:center;border:1px solid #754e1b;background:#ffe69a;color:#222;border-radius:50%;font-size:10px;width:14px;height:14px;cursor:help}
+
+@media(min-width:900px){.board{width:min(100%,225px)!important}.boardpanel{min-width:0}.board .cell{min-height:0!important}.boardMoveIcon{height:14px;line-height:14px}.boardMoveIcon .moveSymbol{height:15px;width:15px}}
+.cycleNew{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:12px 0}.cycleNew>div{background:#375768;border:1px solid #a5c5cf;border-radius:10px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;min-width:112px}.cycleNew small{font-size:11px;color:#e4eef3}.cycleReturn{background:#38534d;padding:10px;border-radius:8px;text-align:center}
+#tutorialCoach{left:12px!important;right:auto!important;bottom:12px!important;width:min(355px,calc(100vw - 24px))!important;max-height:56vh;overflow:auto}
+#coachRestore{left:12px;right:auto}
+@media(max-width:850px){#tutorialCoach{max-height:38vh}}
+.tabHelp{margin-right:8px!important;flex-shrink:0}
+#shoptabs{align-items:center}
+
+/* v6.22: help icons are positioned inside their own tab, not after each tab */
+#shoptabs{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.shopTabGroup{position:relative;display:inline-flex;align-items:center}
+.shopTabGroup>button{padding-right:24px}
+.shopTabGroup .tabHelp{position:absolute!important;right:3px!important;top:2px!important;left:auto!important;margin:0!important;width:15px!important;height:15px!important;min-width:15px!important;font-size:10px!important;line-height:1!important;border-width:1px!important;display:flex!important;align-items:center!important;justify-content:center!important;transform:none!important}
+.gamecard .cardNameWithIcon{display:flex;align-items:center;min-width:0;gap:3px}
+.gamecard .cardTitleNoWrap{font-size:clamp(10px,0.85vw,13px);white-space:nowrap;letter-spacing:-.045em}
+.gamecard .energyNoWrap{white-space:nowrap;font-size:11px}
+#tutorialCoach.coachHigh{bottom:auto!important;top:12px!important;max-height:calc(100vh - 24px)!important;overflow:auto}
+.pileGuide{display:flex;flex-direction:column;gap:6px;margin:9px 0}
+.pileGuide>div{display:grid;grid-template-columns:100px 1fr;align-items:center;gap:8px;background:#2a4757;border:1px solid #607c88;border-radius:9px;padding:7px 9px}
+.pileGuide b{color:#ffe4a3;white-space:nowrap}.pileGuide span{font-size:12px;line-height:1.5}
+@media(max-width:700px){#tutorialCoach.coachHigh{top:6px!important;bottom:auto!important;max-height:60vh!important}}
+/* v6.32: outline!important が keyframes の色変更を阻害していたため、独立した疑似要素で確実に点滅 */
+.guideFocus{outline:none!important;box-shadow:none!important;animation:none!important;position:relative!important;isolation:isolate}
+.guideFocus::after{content:""!important;position:absolute!important;inset:-6px!important;border:5px solid #ffdb38!important;border-radius:5px!important;box-shadow:none!important;pointer-events:none!important;z-index:50!important;visibility:hidden;animation:guideBlinkVisible 3.6s steps(1,end) 1 both!important}
+@keyframes guideBlinkVisible{
+ 0%,24.999%,50%,74.999%{visibility:visible}
+ 25%,49.999%,75%,99.999%{visibility:hidden}
+ 100%{visibility:visible}
+}
+
+#onlineBar{position:sticky;top:0;z-index:100;background:#142d3b;border-bottom:2px solid #d5b36c;padding:9px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}
+#onlineBar input{width:120px;padding:7px;color:white;background:#183849;border:1px solid #9babb5;border-radius:6px}
+#onlineBar button{padding:8px 12px}
+#onlineStatus{font-weight:bold}
+#onlineBar .roomlink{max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#onlineBar .hidden{display:none}
+</style></head><body><div id="onlineBar">
+<strong>🌐 2人オンライン対戦</strong>
+<input id="roomCode" placeholder="部屋番号" maxlength="12" aria-label="部屋番号">
+<button onclick="createOnlineRoom()">部屋を作る</button>
+<button onclick="joinOnlineRoom()">部屋に参加</button>
+<span id="onlineStatus">未接続（ローカル操作）</span>
+<button id="copyInvite" class="hidden" onclick="copyOnlineInvite()">招待URLをコピー</button>
+<button id="leaveOnline" class="hidden" onclick="leaveOnlineRoom()">退出</button>
+</div><header><h1>☗ 三道の切札</h1><small>オンライン対戦版 v7.0</small><button id="bgmToggle" class="ghost" style="margin-left:14px;padding:5px 12px;font-size:12px" onclick="toggleBGM()" aria-pressed="false">♫ BGM：OFF</button></header><main>
+<section class="panel leftpanel"><button class="primary full" id="tutorialLaunch" onclick="askTutorial()">📖 初心者チュートリアル</button><div id="overview" class="hidden"></div><div id="actions"></div><button id="undoBtn" class="ghost full" onclick="undoAction()">↶ 1手やりなおし</button><h2 style="margin-top:20px">履歴</h2><div class="log" id="log"></div></section>
+<section class="panel boardpanel"><div id="turnbanner" class="turnbanner"></div><h2 class="layoutcenter" id="boardtitle">盤面</h2><div id="board" class="board"></div><div id="boardhelp" class="muted layoutcenter"></div><div class="status" id="message"></div><div class="notice">操作：自分の駒を選択 → 緑のマスをクリック。カード移動は手札のカードを選んでから駒をクリック。通常移動とカード移動の順序は自由です。</div></section>
+<section class="panel rightpanel"><div id="energybar" class="energybar"></div><div id="handinfo" class="muted" style="margin:8px 0"></div><h2 id="handtitle">手札</h2><div id="hand" class="cardlist"></div><button class="ghost full" onclick="openDeckViewer()">🗂 現在のデッキを確認</button><div id="catalog" class="hidden"><div id="catalogitems"></div></div><div id="purchased" class="hidden"></div><div id="shop" class="hidden"><h2>購入フェイズ</h2><div class="muted" id="shopinfo"></div><div class="tabs" id="shoptabs"></div><div id="shopitems"></div></div><div id="deployment" class="hidden"><h2>駒の配置</h2><div id="reserve"></div><div class="notice">駒を選び、自陣の空きマスを押して配置。未配置の駒は控えとして残ります。</div></div></section>
+</main><div id="shopCutin" class="hidden" aria-hidden="true"><div>🪙 購入フェイズ！</div></div><div id="cardTooltip" class="hidden" role="tooltip"></div><div id="deckOverlay" class="hidden" role="dialog" aria-modal="true" aria-label="デッキ確認"><div class="tutorialbox"><div class="tutorialtop"><strong id="deckViewerTitle">現在のデッキ</strong><button onclick="closeDeckViewer()">✕ 閉じる</button></div><div id="deckViewerBody"></div><div class="tutorialbottom"><button onclick="closeDeckViewer()">ゲームへ戻る</button></div></div></div><button id="coachRestore" class="hidden" onclick="restoreTutorial()" title="チュートリアルを開く">📖 チュートリアルを開く</button><div id="tutorialCoach" class="hidden" role="region" aria-label="操作しながら学ぶチュートリアル">
+<div class="coachhead"><strong>📖 操作チュートリアル <span id="coachCount"></span></strong><button class="ghost" id="coachMinimize" onclick="minimizeTutorial()" title="チュートリアルを最小化">－</button></div>
+<div id="coachTitle" class="coachtitle"></div><div id="coachBody" class="coachbody"></div>
+<div class="coachbuttons"><button class="ghost" id="coachBack" onclick="tutorialBack()">← ひとつ前に戻る</button><button class="ghost" onclick="skipTutorial()">スキップ</button><button class="primary" id="coachNext" onclick="tutorialNext()">次へ →</button></div></div><div id="drawCutin" class="hidden" onclick="hideDrawCutin()" role="status" aria-live="polite"><div class="cutinInner"><div id="cutinPlayer" class="cutinTitle"></div><div id="cutinCards" class="cutinCards"></div><div class="cutinNote">クリックで閉じる</div></div></div><script>
+const N=9, W=3, MAX_ENERGY=3;
+const energyCost={doubleF1:3,f3:2,f1:1,f2:2,b1:1,dr1:1,dl1:1,line:3,right:1,left:1,wait:0,side1:1,diag1:1,back2:2,side2:2,diag2:2,all1:1,swapHand:1,swap:1,shield:2,corner:1,draw2:0,jump:2,compress:0,save:0,bonus3:0,trap1:0};
+const cardDefs={doubleF1:{name:'前1連打',price:6,type:'dir',move:'doubleF1'},f3:{name:'前進3',price:6,type:'dir',move:'f3'},f1:{name:'前進1',price:0,type:'dir',move:'f1'},f2:{name:'前進2',price:2,type:'dir',move:'f2'},b1:{name:'後退1',price:1,type:'dir',move:'b1'},dr1:{name:'右斜め前1',price:2,type:'dir',move:'dr1'},dl1:{name:'左斜め前1',price:2,type:'dir',move:'dl1'},line:{name:'直進',price:8,type:'dir',move:'line'},right:{name:'右横1',price:2,type:'dir',move:'right'},left:{name:'左横1',price:2,type:'dir',move:'left'},wait:{name:'様子見',price:null,type:'special'},side1:{name:'左右移動1',price:2,type:'dir',move:'side1'},diag1:{name:'斜め前進1',price:2,type:'dir',move:'diag1'},back2:{name:'後退2',price:3,type:'dir',move:'back2'},side2:{name:'横移動2',price:3,type:'dir',move:'side2'},diag2:{name:'斜め移動2',price:4,type:'dir',move:'diag2'},all1:{name:'全方向1',price:5,type:'dir',move:'all1'},swapHand:{name:'手札交換',price:3,type:'special'},swap:{name:'入れ替え',price:4,type:'dir'},shield:{name:'防御',price:2,type:'special'},corner:{name:'四つ角1',price:3,type:'dir'},draw2:{name:'ドロー3',price:4,type:'special'},compress:{name:'廃棄',price:3,type:'special'},save:{name:'エナジー－1',price:6,type:'special'},bonus3:{name:'金＋3',price:5,type:'special'},trap1:{name:'トラップ1',price:5,type:'special'},jump:{name:'跳躍',price:3,type:'special'}};
+const pieceDefs={P:{name:'歩',price:2},L:{name:'香',price:9},N:{name:'桂',price:3},S:{name:'銀',price:4},G:{name:'金',price:4},R:{name:'飛',price:10},K:{name:'王',price:null}};
+const saleCards=new Set(['line','all1','corner','swap','save','draw2','f3','bonus3','trap1']);
+function forSaleCard(id,def){return def.price!==null&&saleCards.has(id)}
+
+const starter=['f1','f1','f1','f2','b1','dr1','dl1','line','right','left','wait'];
+let s;let undoStack=[];function undoAction(){if(onlineActive)return;if(!undoStack.length)return;s=JSON.parse(undoStack.pop());render()}
+document.addEventListener('click',e=>{if(guideStep>=0||onlineActive)return;let b=e.target.closest('button');if(!b||b.disabled||b.id==='undoBtn'||(b.closest('#tutorialOverlay')||b.closest('#deckOverlay'))||b.closest('#drawCutin')||(b.textContent.includes('チュートリアル')||b.textContent.includes('デッキを確認'))||b.textContent.includes('最初からやり直す'))return;undoStack.push(JSON.stringify(s));if(undoStack.length>80)undoStack.shift()},true);
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undoAction()}});
+let soundCtx=null,bgmOn=false,bgmTimer=null,bgmStep=0,bgmMaster=null;
+function audioReady(){try{soundCtx??=new (window.AudioContext||window.webkitAudioContext)();if(soundCtx.state==='suspended')soundCtx.resume();return soundCtx}catch(e){return null}}
+function tone(hz,when,duration,vol=.05,type='sine',destination=null){let ctx=audioReady();if(!ctx)return;let o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.setValueAtTime(hz,when);g.gain.setValueAtTime(.0001,when);g.gain.exponentialRampToValueAtTime(Math.max(.0002,vol),when+.012);g.gain.exponentialRampToValueAtTime(.0001,when+duration);o.connect(g).connect(destination||ctx.destination);o.start(when);o.stop(when+duration+.015)}
+const pieceMoveAudio=new Audio('data:audio/mpeg;base64,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');
+pieceMoveAudio.preload='auto';
+function playSE(kind){try{let ctx=audioReady();if(!ctx)return;let t=ctx.currentTime;if(kind==='move'){
+ const hit=pieceMoveAudio.cloneNode(true);
+ hit.volume=.48;
+ hit.play().catch(()=>{});
+ return;
+ }
+ if(kind==='gong'){
+  // 重厚なドラ: 複数の非整数倍音を長く減衰させる
+  [1,1.47,2.06,2.63,3.37,4.18].forEach((v,j)=>tone(108*v,t+j*.018,2.7-j*.22,.16/(1+j*.32),j%2?'triangle':'sine'));
+  tone(54,t,2.9,.14,'sine');return;
+ }
+ if(kind==='applause'){
+  // 拍手喝采: 複数の短いノイズを重ねた拍手とファンファーレ
+  const duration=2.2,buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*duration),ctx.sampleRate),a=buf.getChannelData(0);
+  for(let i=0;i<a.length;i++){
+   const sec=i/ctx.sampleRate,beat=sec%0.14,env=Math.exp(-beat*70);
+   a[i]=(Math.random()*2-1)*env*(.12+.55*Math.min(1,sec/.5))*(1-Math.max(0,sec-1.65)/.55);
+  }
+  const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=buf;gain.gain.value=.45;
+  source.connect(gain).connect(ctx.destination);source.start(t);
+  [392,523.25,659.25,783.99,1046.5].forEach((hz,j)=>tone(hz,t+j*.15,.5,.095,'triangle'));
+  return;
+ }
+ if(kind==='kingHit'){
+  const duration=.32,buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*duration),ctx.sampleRate),data=buf.getChannelData(0);
+  for(let i=0;i<data.length;i++){let x=i/ctx.sampleRate;data[i]=(Math.random()*2-1)*Math.exp(-x*13)*(.65+.35*Math.sin(2*Math.PI*72*x));}
+  let src=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),g=ctx.createGain();
+  src.buffer=buf;filter.type='highpass';filter.frequency.value=650;g.gain.value=.36;
+  src.connect(filter).connect(g).connect(ctx.destination);src.start(t);
+  [210,120].forEach((hz,j)=>tone(hz,t+j*.05,.22,.12,'sawtooth'));return;
+ }
+ if(kind==='draw'){[500,750,1000].forEach((hz,j)=>tone(hz,t+j*.042,.12,.045,'triangle'));return}
+ if(kind==='trash'){[440,659.25,880,1174.66,1568].forEach((hz,j)=>tone(hz,t+j*.058,.22,.095,'triangle'));tone(2093,t+.23,.38,.07,'sine');return}
+ if(kind==='discount'){[880,660].forEach((hz,j)=>tone(hz,t+j*.09,.16,.06,'sine'));return}
+ if(kind==='money'){[784,988,1175].forEach((hz,j)=>tone(hz,t+j*.075,.19,.065,'sine'));return}
+ let notes=kind==='purchase'?[880,1175,1568]:kind==='coin'?[620,840]:kind==='trap'?[260,150,90]:kind==='trapSet'?[330,220]:kind==='deploy'?[410,600]:kind==='win'?[392,523,659,784,1047]:[450];notes.forEach((hz,i)=>tone(hz,t+i*.07,kind==='win'?.3:.14,kind==='purchase'?.11:.075,kind==='trap'?'sawtooth':kind==='purchase'?'triangle':'sine'))}catch(e){}}
+// 音源ファイル不要の和風BGM。初回のボタン操作後に再生する。
+const bgmMelody=[220,0,261.63,293.66,0,349.23,293.66,261.63,220,0,196,0,174.61,196,220,0,293.66,349.23,0,392,349.23,293.66,261.63,0,220,196,174.61,0,196,220,0,0];
+function bgmTick(){if(!bgmOn)return;let ctx=audioReady();if(!ctx)return;let t=ctx.currentTime,n=bgmMelody[bgmStep%bgmMelody.length];if(n){tone(n,t,.24,.042,'triangle',bgmMaster);tone(n*2,t+.008,.12,.009,'sine',bgmMaster)}if(bgmStep%8===0){tone(82.41,t,.55,.035,'sine',bgmMaster);tone(164.81,t,.16,.20,.014,'triangle',bgmMaster)}if(bgmStep%8===4)tone(110,t,.18,.018,'triangle',bgmMaster);bgmStep++}
+function toggleBGM(){let ctx=audioReady();if(!ctx)return;bgmOn=!bgmOn;let btn=document.getElementById('bgmToggle');btn.textContent='♫ BGM：'+(bgmOn?'ON':'OFF');btn.setAttribute('aria-pressed',String(bgmOn));if(bgmOn){bgmMaster=ctx.createGain();bgmMaster.gain.value=1.15;bgmMaster.connect(ctx.destination);bgmTick();bgmTimer=setInterval(bgmTick,490)}else{clearInterval(bgmTimer);bgmTimer=null;if(bgmMaster){bgmMaster.gain.setTargetAtTime(0,ctx.currentTime,.04);bgmMaster=null}}}
+function showShopCutin(){let el=document.getElementById('shopCutin');if(!el)return;el.classList.add('hidden');void el.offsetWidth;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),1800)}
+function shopEffect(){let el=document.getElementById('shop');if(el){el.classList.remove('shopPulse');void el.offsetWidth;el.classList.add('shopPulse')}let f=document.createElement('div');f.className='shopFloat';f.textContent='✦ '+(s.phase==='play'?'+5金':'カード獲得！');document.body.appendChild(f);setTimeout(()=>f.remove(),1000)}
+function miniEffect(text,kind='draw'){
+ let el=document.createElement('div');el.className='miniCardEffect '+kind;
+ el.textContent=text;document.body.appendChild(el);setTimeout(()=>el.remove(),2150);
+}
+function drawWithEffect(p,n){
+ const before=s.players[p].hand.length;draw(p,n);
+ const got=s.players[p].hand.slice(before);
+ if(got.length){miniEffect('✦ '+got.map(cardName).join('・')+' をドロー','draw');playSE('draw')}
+ return got;
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function log(t){s.log.unshift(t);s.log=s.log.slice(0,100)}
+function newPlayer(){return {coins:0,maxEnergy:MAX_ENERGY,deck:shuffle([...starter]),discard:[],hand:[],roster:['K','P','P','P'],turns:0,dirRound:0,goals:{},paidGoals:{},doneShop:false,ready:false,turnDirs:0,movedThisTurn:[],pendingPieces:[],exiled:[]}}
+function init(){undoStack=[];s={players:[newPlayer(),newPlayer()],round:1,phase:'play',turn:0,board:Array(27).fill(null),moveUsed:false,movedAction:false,cardsUsed:0,energy:MAX_ENERGY,selected:null,activeCard:null,mode:'normal',shopTab:'action',log:[],goals:[],message:'先手（赤）の番です。',turnNumber:0,swapOrigin:null,handSwapRemaining:0,jumpReady:false,gameWinner:null,buySelected:null,uidCounter:0,combo:null,discount:0,firstWinner:null,traps:[],turnSerial:0};s.players[1].deck.splice(s.players[1].deck.indexOf('wait'),1,'dr1');s.players[0].turns=1;s.board[1]={p:0,t:'K',hp:2,uid:'rK'};s.board[25]={p:1,t:'K',hp:2,uid:'bK'};for(let c=0;c<3;c++){s.board[3+c]={p:0,t:'P',uid:'rP'+c};s.board[21+c]={p:1,t:'P',uid:'bP'+c}};draw(0,5);log('ゲーム開始。赤（先手）から。');render()}
+function player(){return s.players[s.turn]};function pname(i){return (i===0?'赤':'青')+'（'+(s?.round===2?(i===s.secondFirst?'先手':'後手'):(i===0?'先手':'後手'))+'）'}function coords(i){return 'ABC'[i%3]+(Math.floor(i/3)+1)}function at(r,c){return r>=0&&r<9&&c>=0&&c<3?r*3+c:-1}function rc(i){return [Math.floor(i/3),i%3]};function dir(p){return p===0?1:-1}function enemy(i){return s.board[i]&&s.board[i].p!==s.turn}function friendly(i){return s.board[i]&&s.board[i].p===s.turn}
+function escapeHtml(x){return String(x).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+const cardHelp={doubleF1:'同じ駒を前に1マスずつ最大2回動かす。1回目に敵駒を取っても2回目を行える。',f3:'前方へ1・2・3マスのいずれかを選んで移動。途中の駒は飛び越えられません。',f1:'自分の駒を前方へ1マス移動。',f2:'自分の駒を前方へ1マスまたは2マス移動。',b1:'自分の駒を後方へ1マス移動。',dr1:'自分の駒を右斜め前へ1マス移動。',dl1:'自分の駒を左斜め前へ1マス移動。',line:'前方の障害物または盤端までの好きな距離を直進。ただし、直進で相手の駒を取ることはできない。',right:'自分の駒を右へ1マス移動。',left:'自分の駒を左へ1マス移動。',wait:'何の効果もない。',side1:'左右どちらかへ1マス移動。',diag1:'斜め前の左右どちらかへ1マス移動。',back2:'後方へ2マス移動。',side2:'左右どちらかへ2マス移動。',diag2:'斜め前へ2マス移動。',all1:'縦・横・斜めの好きな方向へ1マス移動。',swapHand:'手札を最大2枚捨て、同じ枚数を引き直す。',swap:'盤上の自分の駒2つの位置を交換する。相手の駒とは交換できない。',shield:'王以外の自分の駒1つを相手の次ターンまで捕獲されない状態にする。',corner:'自分の駒を斜め4方向の好きな方向へ1マス移動。',draw2:'山札からカードを3枚引く。',compress:'山札から1枚引き、任意で手札のカード1枚を廃棄できる。',save:'次に使用するカードの消費エナジーを1減らす（最低0）。',bonus3:'使用すると所持金を3金増やす。',trap1:'空きマスにトラップを設置。敵の駒がそのマスに止まると消滅。ただし、王なら一回耐えられる。設置後4ターンで消える。',bundle:'自陣に縦2マス連続した空きマスがあるとき配置できます。使用後、カードは廃棄されます。',sparrow:'自陣に縦2マス連続した空きマスがあるとき配置できます。使用後、カードは廃棄されます。',jump:'隣の味方の駒を飛び越え、その先へ移動。'};
+function isPieceCard(id){return typeof id==='string'&&(id.startsWith('piece:')||id==='bundle'||id==='sparrow')}
+function pieceType(id){return id.slice(6)}
+
+const cardIconPaths={
+ up:'<path d="M12 19V5m-6 6 6-6 6 6"/>',
+ down:'<path d="M12 5v14m-6-6 6 6 6-6"/>',
+ left:'<path d="M19 12H5m6-6-6 6 6 6"/>',
+ right:'<path d="M5 12h14m-6-6 6 6-6 6"/>',
+ diagonal:'<path d="M5 19 19 5m-9 0h9v9"/>',
+ move:'<path d="M12 2v20M2 12h20m-14-6 4-4 4 4M8 18l4 4 4-4M6 8l-4 4 4 4m12-8 4 4-4 4"/>',
+ corner:'<path d="M5 5 19 19M19 5 5 19M5 10V5h5m4 0h5v5M5 14v5h5m4 0h5v-5"/>',
+ swap:'<path d="M7 7h14m-4-4 4 4-4 4M17 17H3m4-4-4 4 4 4"/>',
+ coins:'<circle cx="12" cy="12" r="9"/><path d="M15 8c-1-1-5-1-6 1-2 3 6 2 6 5-1 3-5 3-7 1M12 5v14"/>',
+ trash:'<path d="M4 7h16M10 3h4m-8 4 1 14h10l1-14M10 11v7m4-7v7"/>',
+ cards:'<rect x="5" y="4" width="13" height="16" rx="2"/><path d="M9 8h5m-5 4h5M18 7h2v12"/>',
+ discount:'<path d="M4 7h16M12 11v9m-4-4 4 4 4-4"/>',
+ trap:'<path d="m12 3 10 18H2L12 3Zm0 6v5m0 4h.01"/>',
+ piece:'<path d="M12 3 20 9l-2 12H6L4 9 12 3Z"/><path d="M9 12h6m-3-3v7"/>',
+ bundle:'<rect x="6" y="2" width="12" height="9" rx="1"/><rect x="6" y="13" width="12" height="9" rx="1"/>',
+ wait:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
+};
+function movementIcon(piece){
+ const directions={P:[[0,-1]],L:[[0,-1]],N:[[-1,-2],[1,-2]],S:[[-1,-1],[0,-1],[1,-1],[-1,1],[1,1]],G:[[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[0,1]],R:[[0,-1],[0,1],[-1,0],[1,0]],K:[[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]]};
+ const thick=piece==='L'||piece==='R';
+ const arrows=(directions[piece]||[]).map(([dx,dy])=>{
+  const norm=Math.hypot(dx,dy),ux=dx/norm,uy=dy/norm;
+  const x=(12+ux*8.3).toFixed(2),y=(12+uy*8.3).toFixed(2);
+  const bx=12+ux*5.5,by=12+uy*5.5,px=-uy*2.2,py=ux*2.2;
+  return `<path d="M12 12L${x} ${y} M${(bx+px).toFixed(2)} ${(by+py).toFixed(2)}L${x} ${y}L${(bx-px).toFixed(2)} ${(by-py).toFixed(2)}"/>`;
+ }).join('');
+ return `<svg class="cardSymbol moveSymbol" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="${thick?2.35:1.55}" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1.7" fill="currentColor"/>${arrows}</svg>`;
+}
+
+function cardIcon(id){
+ if(id==='bundle'||id==='sparrow'){
+  let types=id==='bundle'?['P','S']:['L','R'];
+  return '<span class="setCardSymbols">'+types.map(movementIcon).join('')+'</span>';
+ }
+ if(isPieceCard(id))return movementIcon(pieceType(id));
+ let key=({f1:'up',f2:'up',f3:'up',doubleF1:'up',b1:'down',back2:'down',right:'right',left:'left',dr1:'diagonal',dl1:'diagonal',diag1:'diagonal',diag2:'diagonal',line:'up',side1:'move',side2:'move',all1:'move',corner:'corner',swap:'swap',bonus3:'coins',compress:'trash',draw2:'cards',save:'discount',trap1:'trap',wait:'wait'})[id]||'cards';
+ let path=cardIconPaths[key];
+ if(id==='f2'||id==='f3'){
+  let n=id==='f2'?2:3;
+  path=Array.from({length:n},(_,i)=>{let x=n===2?8+i*8:5+i*7;return `<path d="M${x} 20V5m-3 4 3-4 3 4"/>`}).join('');
+ }
+ if(id==='line')path='<path d="M9 22V11H4L12 1l8 10h-5v11Z" fill="currentColor" stroke="none"/>';
+ if(id==='all1')path='<path d="M12 12V3m-3 3 3-3 3 3M12 12v9m-3-3 3 3 3-3M12 12H3m3-3-3 3 3 3M12 12h9m-3-3 3 3-3 3M12 12 5.6 5.6m3.5 0H5.6v3.5M12 12l6.4-6.4m-3.5 0h3.5v3.5M12 12l-6.4 6.4m0-3.5v3.5h3.5M12 12l6.4 6.4m-3.5 0h3.5v-3.5"/>';
+ return '<svg class="cardSymbol" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>';
+}
+
+function cardName(id){return id==='bundle'?'棒銀セット（歩＋銀）・駒カード':id==='sparrow'?'雀刺しセット（香＋飛）・駒カード':isPieceCard(id)?pieceDefs[pieceType(id)].name+'・駒カード':cardDefs[id].name}
+function cardEnergy(id){return Math.max(0,(isPieceCard(id)?(['bundle','sparrow'].includes(id)?2:1):(energyCost[id]??1))-(s?.discount||0))}
+const pieceMoveHelp={P:'前方へ1マス。',L:'前方に何マスでも直進。途中の駒は飛び越えられない。',N:'前方2マス＋左右1マスの位置へ跳ぶ。途中の駒を飛び越えられる。',S:'前方・前斜め・後斜めの計5方向に1マス。',G:'前方・前斜め・左右・真後ろの計6方向に1マス。',R:'縦横に何マスでも直進。途中の駒は飛び越えられない。',K:'縦横斜めの8方向に1マス。王は相手陣の3マスに入れません。'};
+function cardHelpText(id){return id==='bundle'?cardHelp.bundle:id==='sparrow'?cardHelp.sparrow:isPieceCard(id)?pieceDefs[pieceType(id)].name+'：'+pieceMoveHelp[pieceType(id)]+' 自陣3段の空きマスに配置。使用後、このカードは廃棄されます。':cardHelp[id]||cardDefs[id]?.name||''}
+function recordMoved(piece){if(!piece)return;document.getElementById('tutorialLaunch')?.classList.add('tutorialVisited');s.movedAction=true;let p=player();if(!piece.uid)piece.uid='p'+s.round+'-'+s.turn+'-'+Math.random();if(!p.movedThisTurn.includes(piece.uid))p.movedThisTurn.push(piece.uid);if(p.movedThisTurn.length>=3)markGoal('army',s.turn)}
+
+let cutinTimer=null;
+function showDrawCutin(playerIndex){
+ const el=document.getElementById('drawCutin');if(!el)return;
+ // 第1局の各プレイヤー初手では手札紹介の全画面演出を表示しない。
+ if(s.round===1&&s.players[playerIndex].turns===1){hideDrawCutin();return;}
+ const hand=s.players[playerIndex].hand;
+ document.getElementById('cutinPlayer').textContent=(playerIndex===0?'🔴 赤':'🔵 青')+' の手札を'+hand.length+'枚表示！';
+ document.getElementById('cutinCards').innerHTML=hand.slice(-5).map(id=>'<div class="cutinCard">'+escapeHtml(cardName(id))+'</div>').join('');
+ el.classList.remove('hidden');el.classList.remove('cutinAnimate');void el.offsetWidth;el.classList.add('cutinAnimate');
+ if(cutinTimer)clearTimeout(cutinTimer);cutinTimer=null;if(s.round!==1||s.players[playerIndex].turns!==1)cutinTimer=setTimeout(()=>el.classList.add('hidden'),2400);
+}
+function hideDrawCutin(){if(cutinTimer)clearTimeout(cutinTimer);cutinTimer=null;document.getElementById('drawCutin').classList.add('hidden')}
+function draw(p,n){let x=s.players[p];for(let i=0;i<n;i++){if(!x.deck.length){if(!x.discard.length)break;x.deck=shuffle(x.discard.splice(0));}x.hand.push(x.deck.pop())}}
+function legalPiece(piece,i){let [r,c]=rc(i),d=dir(piece.p),moves=[],vectors=[];switch(piece.t){case 'K':vectors=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];break;case 'P':vectors=[[d,0]];break;case 'G':vectors=[[d,-1],[d,0],[d,1],[0,-1],[0,1],[-d,0]];break;case 'S':vectors=[[d,-1],[d,0],[d,1],[-d,-1],[-d,1]];break;case 'N':vectors=[[d*2,-1],[d*2,1]];break;case 'L':return rays(i,[[d,0]]);case 'R':return rays(i,[[1,0],[-1,0],[0,1],[0,-1]]);case 'B':return rays(i,[[1,1],[1,-1],[-1,1],[-1,-1]])}for(let [dr,dc] of vectors){let j=at(r+dr,c+dc);if(j>=0&&!s.board[j])moves.push(j);else if(j>=0&&s.board[j].p!==piece.p&&!s.board[j].shield)moves.push(j)}return moves}
+function rays(i,dirs){let [r,c]=rc(i),p=s.board[i],out=[];for(let [dr,dc] of dirs){for(let k=1;k<9;k++){let j=at(r+dr*k,c+dc*k);if(j<0)break;if(s.board[j]){if(s.board[j].p!==p.p&&!s.board[j].shield)out.push(j);break}out.push(j)}}return out}
+function legalCard(i,id){let piece=s.board[i];if(!piece||piece.p!==s.turn)return [];let [r,c]=rc(i),d=dir(s.turn),m=cardDefs[id]?.move;if(!m)return [];let v=[];switch(m){case'f1':case'doubleF1':v=[[d,0]];break;case'f2':v=[[d,0],[2*d,0]];break;case'f3':v=[[d,0],[2*d,0],[3*d,0]];break;case'b1':v=[[-d,0]];break;case'back2':v=[[-2*d,0]];break;case'dr1':v=[[d,s.turn===0?-1:1]];break;case'dl1':v=[[d,s.turn===0?1:-1]];break;case'right':v=[[0,s.turn===0?-1:1]];break;case'left':v=[[0,s.turn===0?1:-1]];break;case'side1':v=[[0,1],[0,-1]];break;case'side2':v=[[0,2],[0,-2]];break;case'diag1':v=[[d,1],[d,-1]];break;case'diag2':v=[[2*d,2],[2*d,-2]];break;case'all1':v=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];break;case'line':return rays(i,[[d,0]]).filter(j=>!s.board[j])}return v.filter(([dr,dc])=>!['f2','f3'].includes(m)||Math.abs(dr)===1||(!s.board[at(r+d,c)]&&(Math.abs(dr)===2||!s.board[at(r+2*d,c)]))).map(([dr,dc])=>at(r+dr,c+dc)).filter(j=>j>=0&&(!s.board[j]||(s.board[j].p!==s.turn&&!s.board[j].shield)))}
+function legalCorner(i){
+ const [r,c]=rc(i),out=[];
+ for(const dr of [-1,1])for(const dc of [-1,1]){
+  const j=at(r+dr,c+dc);
+  if(j>=0&&(!s.board[j]||(s.board[j].p!==s.turn&&!s.board[j].shield)))out.push(j);
+ }
+ return out;
+}
+function legalJump(i){let [r,c]=rc(i),o=[];for(let [dr,dc] of [[1,0],[-1,0],[0,1],[0,-1]]){let mid=at(r+dr,c+dc),end=at(r+2*dr,c+2*dc);if(mid>=0&&end>=0&&s.board[mid]?.p===s.turn&&(!s.board[end]||(s.board[end].p!==s.turn&&!s.board[end].shield)))o.push(end)}return o}
+function legalSwap(i){return s.board.map((piece,j)=>j!==i&&piece?.p===s.turn?j:-1).filter(j=>j>=0)}
+function kingDestinationOK(from,to){let x=s.board[from];if(x?.t!=='K')return true;let row=Math.floor(to/3);return x.p===0?row<=6:row>=2}
+function options(){if(s.combo){return legalCard(s.combo.from,'f1')}if(s.selected===null)return [];if(s.mode==='deploy')return [];if(s.mode==='swap')return legalSwap(s.selected).filter(j=>kingDestinationOK(s.selected,j)&&kingDestinationOK(j,s.selected));if(s.mode==='corner')return legalCorner(s.selected).filter(j=>kingDestinationOK(s.selected,j));if(s.mode==='jump')return legalJump(s.selected).filter(j=>kingDestinationOK(s.selected,j));if(s.mode==='shield')return [];if(s.activeCard)return legalCard(s.selected,s.activeCard.id).filter(j=>kingDestinationOK(s.selected,j));if(!s.moveUsed)return legalPiece(s.board[s.selected],s.selected).filter(j=>kingDestinationOK(s.selected,j));return []}
+function markGoal(id,p){}
+function afterMove(from,to,wasCard,comboStep=false){
+ let x=s.board[from],target=s.board[to];
+ if(!x||target?.shield){s.message='移動できません。';render();return}
+ const firstCombo=wasCard&&s.activeCard?.id==='doubleF1';
+ if(target?.t==='K'){
+  if(player().turns===1){s.message='双方とも自分の初手では王を攻撃できません。';render();return}
+  target.hp=(target.hp??2)-1;
+  log(pname(s.turn)+' が '+pname(target.p)+'の王に攻撃！ 残り体力'+Math.max(0,target.hp));
+  markGoal('capture',s.turn);
+  if(wasCard)consumeCard();else if(!comboStep)s.moveUsed=true;
+  if(target.hp<=0){s.combo=null;clearSelection();finishRound(s.turn);return}
+  if(firstCombo){s.combo={from};s.selected=from;s.activeCard=null;s.mode='normal';playSE('kingHit');miniEffect('王に1ダメージ！','damage');s.message='王に1ダメージ！ 前1連打の2歩目を選択してください。';render();return}
+  if(comboStep){s.combo=null}
+  playSE('kingHit');miniEffect('王に1ダメージ！','damage');clearSelection();s.message='王に1ダメージ！ 残り体力 '+target.hp+'。';render();return
+ }
+ if(target){log(pname(s.turn)+' が '+coords(to)+' の'+pieceDefs[target.t].name+'を捕獲');markGoal('capture',s.turn)}
+ s.board[to]=x;s.board[from]=null;recordMoved(x);if(resolveTrap(to)){if(wasCard)consumeCard();else if(!comboStep)s.moveUsed=true;clearSelection();render();return;}
+ log(pname(s.turn)+' '+pieceDefs[x.t].name+' '+coords(from)+'→'+coords(to));playSE('move');
+ if(to===13)markGoal('center',s.turn);
+ let row=rc(to)[0];if((s.turn===0&&row>=6)||(s.turn===1&&row<=2))markGoal('infiltrate',s.turn);
+ if(wasCard)consumeCard();else if(!comboStep)s.moveUsed=true;
+ if(firstCombo){s.combo={from:to};s.selected=to;s.activeCard=null;s.mode='normal';s.message='前1連打：2歩目を選択してください（捕獲後も続けられます）。';render();return}
+ if(comboStep)s.combo=null;
+ clearSelection();s.message='移動しました。続けて操作するか、ターン終了してください。';render()
+}
+function resolveTrap(i){
+ const idx=s.traps.findIndex(t=>t.i===i&&t.owner!==s.board[i]?.p);
+ if(idx<0)return false;
+ const hit=s.board[i];s.traps.splice(idx,1);
+ if(hit.t==='K'){
+  hit.hp=(hit.hp??2)-1;
+  log('💥 '+coords(i)+' のトラップ発動！ '+pname(hit.p)+'の王に1ダメージ');
+  playSE('kingHit');miniEffect('トラップ！ 王に1ダメージ','damage');
+  if(hit.hp<=0){s.board[i]=null;finishRound(1-hit.p);return true;}
+  s.message='王はトラップを耐えました。残り体力 '+hit.hp+'。';return true;
+ }
+ s.board[i]=null;
+ log('💥 '+coords(i)+' のトラップ発動！ '+pname(hit.p)+'の'+pieceDefs[hit.t].name+'が消滅');
+ s.message='トラップ発動！ '+coords(i)+' の駒が消えました。';playSE('trap');miniEffect('トラップ発動！','trash');return true;
+}
+function ageTraps(){s.turnSerial++;s.traps=s.traps.filter(t=>{if(t.expires>s.turnSerial)return true;log('トラップ '+coords(t.i)+' が期限切れで消滅');return false;});}
+function consumeCard(){if(s.activeCard){s.energy-=cardEnergy(s.activeCard.id);if(s.activeCard.id!=='save')s.discount=0;let idx=player().hand.indexOf(s.activeCard.id);if(idx>=0)player().discard.push(...player().hand.splice(idx,1));s.cardsUsed++;if(cardDefs[s.activeCard.id].type==='dir'){player().turnDirs++;player().dirRound++;if(player().turnDirs>=3)markGoal('combo',s.turn)}}playSE('card');s.activeCard=null;s.mode='normal'}
+function clearSelection(){s.selected=null;s.activeCard=null;s.mode='normal';s.swapOrigin=null}
+function clickCell(i){if(s.phase==='deploy'){placePiece(i);return}if(['shop','turnShop','bonus'].includes(s.phase))return;if(s.phase!=='play')return;
+if(s.mode==='trap'){if(s.board[i]||s.traps.some(t=>t.i===i)){s.message='空いているマスに設置してください。';render();return;}s.traps.push({i,owner:s.turn,expires:s.turnSerial+4});miniEffect('⚠ トラップ設置：4ターン持続','trap');consumeCard();s.message=coords(i)+' にトラップを設置しました（4ターン持続）。';log(pname(s.turn)+' がトラップ設置 '+coords(i));playSE('trapSet');render();return;}
+if(s.mode==='compress'){s.message='廃棄中です。手札を選ぶか「廃棄しない」を押してください。';render();return}
+if(s.combo){if(options().includes(i))afterMove(s.combo.from,i,false,true);else{s.message='前1連打の2歩目は前方1マスのみです。「連打を終了」で中断できます。';render()}return}
+if(s.mode==='summon'){
+ let id=s.activeCard?.id,r=Math.floor(i/3);
+ if(!isPieceCard(id))return;
+ if(id==='bundle'||id==='sparrow'){let lower=i+3;let types=id==='bundle'?['P','S']:['L','R'];let label=id==='bundle'?'棒銀セット':'雀刺しセット';if(r>=8||lower>=27||s.board[i]||s.board[lower]||!(s.turn===0?r<=1:r>=6&&r<=7)){s.message='自陣3段内に上下2マスの空きが必要です（上が'+pieceDefs[types[0]].name+'、下が'+pieceDefs[types[1]].name+'）。';render();return;}let hi=player().hand.indexOf(id);if(hi<0||s.energy<cardEnergy(id))return;player().exiled.push(id);player().hand.splice(hi,1);s.energy-=cardEnergy(id);s.discount=0;s.cardsUsed++;s.board[i]={p:s.turn,t:types[0],uid:id+'A'+(++s.uidCounter)};s.board[lower]={p:s.turn,t:types[1],uid:id+'B'+(++s.uidCounter)};log(pname(s.turn)+' が'+label+'を '+coords(i)+'（'+pieceDefs[types[0]].name+'）・'+coords(lower)+'（'+pieceDefs[types[1]].name+'）に配置');clearSelection();s.message=label+'を配置しました。';playSE('deploy');render();return;} 
+ if(s.board[i]){s.message='駒のあるマスには配置できません。';render();return}
+ if(!(s.turn===0?r<=2:r>=6)){s.message='自陣3段（赤1〜3段、青7〜9段）の空きマスを選択してください。';render();return}
+ let handIndex=player().hand.indexOf(id);if(handIndex<0||s.energy<1)return;
+ let type=pieceType(id);
+ player().exiled.push(id);player().hand.splice(handIndex,1);s.energy-=cardEnergy(id);s.discount=0;s.cardsUsed++;
+ s.board[i]={p:s.turn,t:type,uid:'summon-'+s.round+'-'+s.turn+'-'+(++s.uidCounter)};
+ player().roster.push(type);
+ log(pname(s.turn)+'：'+pieceDefs[type].name+'の駒カードを使用し'+coords(i)+'に配置（カード廃棄）');
+ clearSelection();s.message='駒を配置しました。使用した駒カードは廃棄しました。';render();return;
+}
+let p=s.board[i];if(s.mode==='shield'){if(p?.p===s.turn&&p.t!=='K'){p.shield=true;consumeCard();s.message='防御を付与しました';render()}return}if(s.selected!==null&&options().includes(i)){if(s.mode==='swap'){let temp=s.board[i];s.board[i]=s.board[s.selected];s.board[s.selected]=temp;for(let q of [s.board[i],s.board[s.selected]])recordMoved(q);consumeCard();resolveTrap(i);resolveTrap(s.selected);clearSelection();s.message='駒を入れ替えました';playSE('move');render();return}afterMove(s.selected,i,!!s.activeCard);return}if(p?.p===s.turn){s.selected=i;render();return}s.selected=null;render()}
+function playCard(idx){if(s.phase!=='play'||s.combo)return;let id=player().hand[idx];
+if(s.mode==='compress'){
+ if(id===undefined)return;
+ player().exiled.push(id);player().hand.splice(idx,1);s.mode='normal';playSE('trash');miniEffect('カードを廃棄','trash');s.message='廃棄完了：'+cardName(id)+'を永久廃棄しました。';log(pname(s.turn)+' が廃棄で「'+cardName(id)+'」を廃棄');render();return
+}
+if(s.activeCard&&s.activeCard.handIndex===idx){clearSelection();s.message='カード選択をキャンセルしました。';render();return}
+if(!id||s.energy<cardEnergy(id))return;
+if(isPieceCard(id)){s.activeCard={id,handIndex:idx};s.mode='summon';s.selected=null;s.message=cardName(id)+'：自陣3段の緑色の空きマスを選択してください。';render();return}
+let d=cardDefs[id];if(d.type==='dir'&&id!=='swap'){s.activeCard={id,handIndex:idx};s.mode=id==='corner'?'corner':'normal';s.selected=null;s.message=d.name+'：動かす駒を選んでください。';render();return}if(id==='energyUp'){
+ s.activeCard={id};consumeCard();let discard=player().discard;discard.splice(discard.lastIndexOf(id),1);player().maxEnergy++;s.energy++;s.message='永続エナジー＋1！ 次のターンからも最大'+player().maxEnergy+'エナジーです。カードは廃棄しました。';log(pname(s.turn)+' 永続エナジー増加 → '+player().maxEnergy);render();return
+}
+if(id==='bonus3'){s.activeCard={id};consumeCard();player().coins+=3;log(pname(s.turn)+' が金＋3を使用');s.message='所持金が3金増えました。';playSE('money');render();return;}
+if(id==='trap1'){s.activeCard={id,handIndex:idx};s.mode='trap';s.selected=null;s.message='トラップを設置する空きマスを選んでください。';render();return;}
+if(id==='compress'){s.activeCard={id};consumeCard();drawWithEffect(s.turn,1);s.mode='compress';s.message='廃棄：1枚引きました。手札を1枚選んで永久廃棄するか、「廃棄しない」を選んでください。';render();return}
+if(id==='save'){s.activeCard={id};consumeCard();s.discount=1;playSE('discount');s.message='エナジー－1：次に使うカードの消費エナジーが1減ります。';render();return}if(id==='wait'){s.activeCard={id};consumeCard();s.message='待機カードを使用しました。';render();return}if(id==='draw2'){s.activeCard={id};consumeCard();drawWithEffect(s.turn,3);s.message='3枚引きました。';render();return}if(id==='swapHand'){s.activeCard={id};consumeCard();s.mode='handSwap';s.handSwapRemaining=2;s.lastSwapped=-1;s.message='交換する手札を最大2枚選んでください（終了も可）。';render();return}if(id==='shield'||id==='swap'||id==='corner'||id==='jump'){s.activeCard={id,handIndex:idx};s.mode=id;s.selected=null;s.message=d.name+(id==='swap'?'：交換する自分の駒を2つ選んでください（距離制限なし）。':'：対象の自分の駒を選んでください。');render()}}
+function skipTrash(){if(s.mode!=='compress')return;s.mode='normal';s.message='廃棄せずに終了しました。';render()}
+function handSwapCard(idx){let id=player().hand.splice(idx,1)[0];player().discard.push(id);let before=player().hand.length;drawWithEffect(s.turn,1);s.lastSwapped=player().hand.length>before?player().hand.length-1:-1;s.message='「'+cardName(id)+'」を交換 → '+(s.lastSwapped>=0?cardName(player().hand[s.lastSwapped]):'山札切れ')+'を引きました（緑枠）。';s.handSwapRemaining--;if(s.handSwapRemaining<=0)s.mode='normal';render()}
+function endCombo(){if(!s.combo)return;s.combo=null;clearSelection();s.message='前1連打を終了しました。';render()}
+function nextTurn(){ageTraps();playSE('turn');if(s.players.every(p=>p.turns>=10)){finishRound(null);return}s.turn=1-s.turn;s.phase='play';s.moveUsed=false;s.movedAction=false;s.cardsUsed=0;s.discount=0;s.energy=s.players[s.turn].maxEnergy;clearSelection();s.players[s.turn].turns++;s.players[s.turn].turnDirs=0;s.players[s.turn].movedThisTurn=[];s.players[s.turn].goals={};s.players[s.turn].paidGoals={};s.lastSwapped=-1;draw(s.turn,5);showDrawCutin(s.turn);log(pname(s.turn)+' のターン（'+s.players[s.turn].turns+'/10）');s.message=pname(s.turn)+' の番です。';render()}
+function canMoveAnyPiece(){
+ for(let i=0;i<s.board.length;i++){
+  let piece=s.board[i];if(!piece||piece.p!==s.turn)continue;
+  if(!s.moveUsed&&legalPiece(piece,i).length)return true;
+  for(let id of player().hand){
+   if(cardDefs[id]?.type==='dir'&&s.energy>=cardEnergy(id)&&legalCard(i,id).length)return true;
+   if(id==='corner'&&s.energy>=cardEnergy(id)&&legalCorner(i).length)return true;
+   if(id==='swap'&&s.energy>=cardEnergy(id)&&legalSwap(i).length)return true;
+   if(id==='jump'&&s.energy>=cardEnergy(id)&&legalJump(i).length)return true;
+  }
+ }
+ return false;
+}
+function canEndTurn(){return s.movedAction||!canMoveAnyPiece()}
+function endTurn(){if(s.phase!=='play')return;if(!canEndTurn()){s.message='自分の駒を最低1回動かしてからターンを終了してください。';render();return;}if(s.mode==='compress'){s.message='廃棄の選択を完了してください。';render();return}s.combo=null;let p=player();p.discard.push(...p.hand.splice(0));for(let piece of s.board)if(piece?.p===s.turn)delete piece.shield;clearSelection();p.coins+=5;log(pname(s.turn)+' ターン終了基本収入 +5金');playSE('coin');shopEffect();s.phase='turnShop';showShopCutin();s.shopTab='action';s.buySelected=null;s.message=pname(s.turn)+' の購入フェイズです。＋5金を獲得しました。買い物を終えたら相手のターンへ。';log(pname(s.turn)+' のターン終了・購入フェイズ');render()}
+function finishRound(winner){playSE(s.round===1?'applause':'win');miniEffect('第'+s.round+'局 終了！','victory');s.combo=null;if(s.phase==='play'){player().coins+=5;log(pname(s.turn)+' ターン終了基本収入 +5金')}s.gameWinner=winner;clearSelection();if(s.round===2){s.phase='finished';s.message=winner===null?'第2局は引き分け。勝者なし。':'第2局の勝者 '+pname(winner)+' がこのゲームの勝者です！';log(s.message);render();return;}s.firstWinner=winner;s.players.forEach((p,i)=>{p.survivors=s.board.map((x,index)=>x&&x.p===i&&x.t!=='K'?{t:x.t,from:index}:null).filter(Boolean);p.roster=['K',...p.survivors.map(x=>x.t)]});s.phase='shop';s.players.forEach(p=>{p.doneShop=false});log(winner===null?'ラウンド'+s.round+'：引き分け':'ラウンド'+s.round+'：'+pname(winner)+' の勝利');s.message='ラウンド終了。両者の買い物が終わったら次へ。';render()}
+function buy(id,kind){if(!['shop','turnShop','bonus'].includes(s.phase))return;if(s.phase==='turnShop')player().doneShop=false;if(player().doneShop)return;let price=kind==='bundle'?4:kind==='sparrow'?14:kind==='piece'?pieceDefs[id].price:cardDefs[id].price;if(s.phase==='bonus'){if(s.firstWinner!==s.turn)return;price=0;}if(player().coins<price||(kind==='card'&&!forSaleCard(id,cardDefs[id])))return;player().coins-=price;if(guideStep>=0)guidePurchaseCount++;if(kind==='bundle'||kind==='sparrow'){player().discard.push(id);s.message=(id==='bundle'?'棒銀セット':'雀刺しセット')+'を捨て札に追加しました。';}else if(kind==='piece'){player().discard.push('piece:'+id);s.message=pieceDefs[id].name+'の駒カードを捨て札に追加しました。手札に引いたら1エナジーで配置できます。'}else player().discard.push(id);log(pname(s.turn)+' が '+(kind==='bundle'?'棒銀セット':kind==='sparrow'?'セット':kind==='piece'?pieceDefs[id].name:cardDefs[id].name)+' を'+price+'金で購入');playSE('purchase');shopEffect();if(s.phase==='bonus'){startSecondMatch();return;}render()}
+function shopDone(){playSE('purchase');if(s.phase==='turnShop'){log(pname(s.turn)+' 買い物完了');nextTurn();return}player().doneShop=true;log(pname(s.turn)+' 買い物完了');if(s.players.every(p=>p.doneShop)){if(s.round===1&&s.firstWinner!==null){s.phase='bonus';s.turn=s.firstWinner;s.players[s.turn].doneShop=false;s.shopTab='action';s.message='第1局勝者ボーナス：ショップから好きなカードを1枚無料で選んでください。';render();return;}startSecondMatch();return;}else{s.turn=1-s.turn}render()}
+function startSecondMatch(){
+ playSE('gong');miniEffect('第2局 開始！','gong');
+ s.round=2;s.phase='deploy';s.secondFirst=s.firstWinner===null?0:1-s.firstWinner;s.turn=s.secondFirst;s.board=Array(27).fill(null);s.traps=[];s.turnSerial=0;
+ s.players.forEach((p,i)=>{
+  p.doneShop=false;p.pendingPieces=[];p.ready=false;p.turns=0;p.dirRound=0;p.turnDirs=0;p.movedThisTurn=[];
+  p.reserve=[];
+  p.deck=shuffle([...p.deck,...p.discard,...p.hand]);p.discard=[];p.hand=[];
+  s.board[i===0?1:25]={p:i,t:'K',hp:2,uid:(i===0?'r':'b')+'K'};
+ });
+ // 第1局の生存駒を控えに追加。配置場所は各プレイヤーが自由に選択する。
+ s.players.forEach((p,i)=>{
+  p.reserve=(p.survivors||[]).map(x=>x.t);
+  log(pname(i)+'：第1局の生存駒 '+p.reserve.length+'枚を自由配置');
+ });
+ s.deploySelected=null;s.buySelected=null;
+ s.message='第2局：第1局終了時に生き残った駒を、自陣3段の好きな空きマスに配置してください。';
+ log('第2局の配置開始');render();
+}
+function placePiece(i){let [r]=rc(i);if(s.board[i]||!(s.turn===0?r<=2:r>=6)||s.deploySelected===null)return;let p=player();let type=p.reserve.splice(s.deploySelected,1)[0];s.board[i]={p:s.turn,t:type,uid:'r'+s.round+'-'+s.turn+'-'+(p.roster.length-p.reserve.length)+'-'+i};s.deploySelected=null;render()}
+function deploySelect(i){s.deploySelected=i;render()}
+function deployDone(){playSE('deploy');player().ready=true;log(pname(s.turn)+' 配置完了');if(s.players.every(p=>p.ready)){s.players.forEach(p=>p.doneShop=false);s.phase='play';s.turn=s.secondFirst??0;s.moveUsed=false;s.movedAction=false;s.cardsUsed=0;s.energy=s.players[s.turn].maxEnergy;s.combo=null;s.players[s.turn].turns=1;s.players[s.turn].movedThisTurn=[];draw(s.turn,5);showDrawCutin(s.turn);s.message='第2局開始。第1局の敗者 '+pname(s.turn)+' が先手です。'}else{s.turn=1-s.turn;s.deploySelected=null;s.message='青の駒を配置してください。'}render()}
+function render(){if(onlineActive&&!onlineReceiving)queueOnlineSync();let p=player();document.getElementById('turnbanner').className='turnbanner '+(s.turn===0?'redturn':'blueturn');document.getElementById('turnbanner').textContent=(s.turn===0?'🔴 赤':'🔵 青')+' の '+(s.phase==='play'?'手番':s.phase==='turnShop'?'購入フェイズ':s.phase==='shop'?'第1局終了後の購入':s.phase==='bonus'?'勝者ボーナス':s.phase==='finished'?'対戦終了':'駒配置')+'　｜　第'+s.round+'局';document.getElementById('overview').innerHTML=`<span class="pill">ラウンド ${s.round}</span><span class="pill">${s.phase==='play'?'対局中':['shop','turnShop','bonus'].includes(s.phase)?'ショップ':s.phase==='finished'?'終了':'駒配置'}</span><div class="status"><strong>${pname(s.turn)}</strong><br>赤 ${s.players[0].coins}金 ／ 青 ${s.players[1].coins}金<br>毎ターン終了時 ＋5金<br>赤 ${s.players[0].turns}/10ターン ／ 青 ${s.players[1].turns}/10ターン</div>${s.phase==='play'?`<div class="muted">通常移動：${s.moveUsed?'使用済み':'残り1回'}</div>`:''}`;document.getElementById('undoBtn').disabled=undoStack.length===0;let actions=document.getElementById('actions');actions.innerHTML=s.phase==='play'?`<button class="primary full" onclick="endTurn()" ${canEndTurn()?'':'disabled title="最低1回駒を動かしてください"'}>ターン終了 → 購入フェイズ</button>${s.combo?`<button class="ghost full" onclick="endCombo()">前1連打の2歩目を終了</button>`:``}`:['shop','turnShop'].includes(s.phase)?`<button class="primary full" ${(p.doneShop&&s.phase!=='turnShop')?'disabled':''} onclick="shopDone()">購入フェイズ終了 → ${s.phase==='turnShop'?pname(1-s.turn)+' のターン':'次へ'}</button>`:s.phase==='bonus'?`<div class="notice">第1局勝者の特典：好きなカードを1枚無料で選択してください。</div>`:s.phase==='finished'?`<div class="status">${s.message}</div>`:`<button class="primary full" onclick="deployDone()">${pname(s.turn)} の配置を終了</button>`;
+document.getElementById('log').innerHTML=s.log.map(x=>'<div>'+x+'</div>').join('');document.getElementById('message').textContent=s.message;
+let valid=options();if(s.phase==='play'&&s.mode==='summon'){valid=s.board.map((x,i)=>{let r=Math.floor(i/3);if(['bundle','sparrow'].includes(s.activeCard?.id))return !x&&r<8&&!s.board[i+3]&&(s.turn===0?r<=1:r>=6&&r<=7)?i:-1;return !x&&(s.turn===0?r<=2:r>=6)?i:-1}).filter(i=>i>=0)}else if(s.phase==='play'&&s.mode==='trap'){valid=s.board.map((x,i)=>!x&&!s.traps.some(t=>t.i===i)?i:-1).filter(i=>i>=0)}else if(s.phase==='deploy'&&s.deploySelected!==null){valid=s.board.map((x,i)=>{let r=Math.floor(i/3);return !x&&(s.turn===0?r<=2:r>=6)?i:-1}).filter(i=>i>=0)}let board=document.getElementById('board');board.innerHTML=s.board.map((x,i)=>`<button class="cell ${s.selected===i?'selected':''} ${valid.includes(i)?'valid':''} ${x?.shield?'shielded':''} ${s.traps.some(t=>t.i===i)?'owntrap':''}" onclick="clickCell(${i})"><span class="coords">${coords(i)}</span>${s.traps.some(t=>t.i===i)?`<span class="trapMark">⚠ ${Math.max(1,s.traps.find(t=>t.i===i).expires-s.turnSerial)}</span>`:''}${x?`<span class="piece p${x.p}">${pieceDefs[x.t].name}</span><span class="boardMoveIcon ${x.p===0?'redFacing':'blueFacing'}">${movementIcon(x.t)}</span><span class="owner">${x.p===0?'赤':'青'}${x.t==='K'?' ♥'+(x.hp??2)+'/2 <span class="kingHelp cardhelp" tabindex="0" data-help="'+escapeHtml(pieceMoveHelp.K)+'" onclick="event.stopPropagation()">?</span>':''}</span>`:''}</button>`).join('');document.getElementById('boardtitle').textContent=['shop','turnShop','bonus'].includes(s.phase)?'購入フェイズ中の盤面':s.phase==='deploy'?'駒の配置':'盤面：赤は下向き／青は上向き（左右は画面基準）';document.getElementById('boardhelp').textContent=s.phase==='deploy'?'赤は上3段、青は下3段に配置できます':s.phase==='play'?(s.mode==='summon'?'緑色の自陣空きマスをクリックすると駒カードを配置できます':'緑枠が移動可能なマスです'):['shop','turnShop','bonus'].includes(s.phase)?'駒は駒カードとして捨て札に追加されます。手札に来たら1エナジーで配置可能':' ';
+document.getElementById('energybar').innerHTML=s.phase==='play'?`⚡ エナジー：${s.energy} / ${p.maxEnergy}（カード使用で消費・毎ターン回復）　<span style="margin-left:12px">🪙 所持金：${p.coins}金</span>`:`🪙 ${pname(s.turn)} 所持金：${p.coins}金<br>⚡ エナジー：対局中に表示`;let hand=document.getElementById('hand'),handtitle=document.getElementById('handtitle');handtitle.textContent=s.phase==='play'?pname(s.turn)+' の手札':'手札';hand.innerHTML=s.phase==='play'?p.hand.map((id,i)=>`<button class="gamecard ${s.activeCard?.handIndex===i?'active':''} ${s.mode==='compress'?'trashTarget':''} ${s.lastSwapped===i?'swappedNew':''}" ${s.energy<cardEnergy(id)&&!['handSwap','compress'].includes(s.mode)?'disabled':''} onclick="${s.mode==='handSwap'?`handSwapCard(${i})`:`playCard(${i})`}"><span class="cardhelp" tabindex="0" role="note" data-help="${escapeHtml(cardHelpText(id))}" onclick="event.stopPropagation()">?</span><strong class="cardNameWithIcon">${cardIcon(id)}<span class="cardTitleNoWrap">${cardName(id)}</span></strong><span>${isPieceCard(id)?'駒カード':cardDefs[id]?.type==='special'?'特殊カード':'方向カード'} ／ ${s.discount>0&&cardEnergy(id)<(isPieceCard(id)?(['bundle','sparrow'].includes(id)?2:1):(energyCost[id]??1))?`<span class="energyOld">${isPieceCard(id)?(['bundle','sparrow'].includes(id)?2:1):(energyCost[id]??1)}</span> → `:''}<span class="energyNoWrap">${cardEnergy(id)} エナジー</span></span></button>`).join(''):' ';document.getElementById('handinfo').innerHTML=s.phase==='play'?`<span class="pill">🗃 山札 ${p.deck.length}枚</span><span class="pill">🗑 捨て札 ${p.discard.length}枚</span><span class="pill">🚫 廃棄札 ${(p.exiled||[]).length}枚</span>${s.mode==='handSwap'?`<br>交換残り ${s.handSwapRemaining}枚 <button onclick="s.mode='normal';render()">交換終了</button>`:''}${s.mode==='compress'?'<br><b style="color:#ffb8a7">廃棄：任意で手札1枚を永久廃棄</b> <button onclick="skipTrash()">廃棄しない</button>':''}`:`<span class="pill">🗃 山札 ${p.deck.length}枚</span><span class="pill">🗑 捨て札 ${p.discard.length}枚</span><span class="pill">🚫 廃棄札 ${(p.exiled||[]).length}枚</span>`;
+document.getElementById('catalog').classList.add('hidden');let shop=document.getElementById('shop');shop.classList.toggle('hidden',!['shop','turnShop','bonus'].includes(s.phase));if(['shop','turnShop','bonus'].includes(s.phase)){document.getElementById('shopinfo').textContent=`${s.phase==='bonus'?'第1局勝者ボーナス：どれでも1枚無料で選択！　':''}${pname(s.turn)}：所持金 ${p.coins}金。`;document.getElementById('shoptabs').innerHTML=[['action','方向カード'],['special','特殊カード'],['piece','駒カード']].map(([id,t])=>`<span class="shopTabGroup"><button class="${s.shopTab===id?'on':''}" onclick="s.shopTab='${id}';render()">${t}</button><span class="cardhelp tabHelp" tabindex="0" role="note" data-help="${id==='action'?'駒の移動方向を増やすカード。使用時にエナジーを消費します。':id==='special'?'特殊カードは使用時にエナジーを消費しません。ドローや金の獲得、トラップなどの効果があります。':'自陣に駒を配置するカードです。使用時にエナジーを消費し、使用後は廃棄されます。'}">?</span></span>`).join('');let items=s.shopTab==='piece'?[...Object.entries(pieceDefs).filter(([id,v])=>v.price!==null).map(([id,v])=>[id,v,'piece']).sort((a,b)=>a[1].price-b[1].price),['bundle',{name:'棒銀セット（歩＋銀）',price:4},'bundle'],['sparrow',{name:'雀刺しセット（香＋飛）',price:14},'sparrow']]:Object.entries(cardDefs).filter(([id,v])=>v.type===(s.shopTab==='special'?'special':'dir')&&forSaleCard(id,v)).sort((a,b)=>a[1].price-b[1].price).map(([id,v])=>[id,v,'card']);document.getElementById('shopitems').innerHTML=items.map(([id,v,k])=>`<div class="storeitem ${k==='bundle'?'setSeparator':''}"><span><strong class="cardNameWithIcon">${cardIcon(k==='piece'?'piece:'+id:id)}${v.name}</strong> <span class="cardhelp shophelp" tabindex="0" role="note" data-help="${escapeHtml(cardHelpText(k==='piece'?'piece:'+id:id))}">?</span><br><small style="color:#b2c3ca">使用 ${['bundle','sparrow'].includes(k)?2:k==='piece'?1:(energyCost[id]??1)} エナジー</small></span><button ${(s.phase!=='bonus'&&p.coins<v.price)||(p.doneShop&&s.phase!=='turnShop')?'disabled':''} onclick="buy('${id}','${k}')">${s.phase==='bonus'?'無料で獲得':v.price+'金で購入'}</button></div>`).join('')}
+let purchased=document.getElementById('purchased');purchased.classList.add('hidden');let deploy=document.getElementById('deployment');deploy.classList.toggle('hidden',s.phase!=='deploy');if(s.phase==='deploy'){document.getElementById('reserve').innerHTML=`<div class="muted">第1局の生存駒を自由配置 ／ 控え：${p.reserve.length}枚 ／ 王は配置済み</div><div class="cardlist">`+p.reserve.map((id,i)=>`<button class="gamecard ${s.deploySelected===i?'active':''}" onclick="deploySelect(${i})">${pieceDefs[id].name}</button>`).join('')+'</div>'}
+if(guideStep>=0)tutorialRefresh();
+}
+
+
+function openDeckViewer(){
+ let p=player(), sections=[['山札',p.deck],['手札',p.hand],['捨て札',p.discard],['廃棄済み',p.exiled||[]]];
+ let total=[...p.deck,...p.hand,...p.discard],counts={};
+ for(let id of total)counts[id]=(counts[id]||0)+1;
+ const fmt=(entries)=>entries.map(([id,n])=>'<div class="deckrow"><span>'+cardIcon(id)+escapeHtml(cardName(id))+' <span class="cardhelp shophelp" tabindex="0" role="note" data-help="'+escapeHtml(cardHelpText(id))+'">?</span> <span class="muted">'+(isPieceCard(id)?'駒カード':cardDefs[id]?.type==='special'?'特殊カード':'方向カード')+'</span></span><strong>×'+n+'</strong></div>').join('');
+ document.getElementById('deckViewerTitle').textContent=pname(s.turn)+' の現在のデッキ';
+ let sorted=Object.entries(counts).sort((a,b)=>cardName(a[0]).localeCompare(cardName(b[0]),'ja'));
+ document.getElementById('deckViewerBody').innerHTML='<p>合計 <strong>'+total.length+'枚</strong>（山札・手札・捨て札の合計）。廃棄済みカードは下の一覧で確認できます。</p>'+fmt(sorted)+'<hr>'+sections.map(([label,arr])=>'<details><summary>'+label+' '+arr.length+'枚</summary>'+fmt(Object.entries(arr.reduce((o,id)=>(o[id]=(o[id]||0)+1,o),{})).sort((a,b)=>cardName(a[0]).localeCompare(cardName(b[0]),'ja')) ) ||'<div class="muted">なし</div>'+'</details>').join('');
+ document.getElementById('deckOverlay').classList.remove('hidden');
+}
+function closeDeckViewer(){document.getElementById('deckOverlay').classList.add('hidden')}
+
+
+const guidedSteps=[
+ {title:'① ゲームについて',body:'このゲームは<b>3×9マスの将棋とデッキ構築</b>を組み合わせた対戦ゲームです。王を2回攻撃すると勝利です。<br><br>全2局を戦い、<b>第2局の勝者がゲームの勝者</b>です。第1局の勝者は<b>好きなカード（後に説明します）を1枚無料で獲得</b>できます。なので、第1局の勝敗も第2局の勝敗に大きく役立つでしょう。',target:'#board',manual:true},
+ {title:'② 赤の歩を動かしてみよう',body:'赤の<b>歩</b>をクリックし、点滅する移動先をクリックしましょう。通常移動は毎ターン1回無料です。',target:'#board',test:()=>s.moveUsed,auto:true},
+ {title:'③ 方向カード「前進1」を2枚使ってみよう',body:'手札の<b>「前進1」</b>を選び、駒と移動先をクリック。これを<b>2回</b>繰り返しましょう。<br><b id="guideCardProgress">使用済み：0 / 2枚</b>',target:'#hand',test:()=>s.players[0].turnDirs>=2,auto:true},
+ {title:'④ エナジーについて',body:'カードは基本的に使用するたびエナジーを消費します。エナジーは毎ターン<b>3</b>支給されます。次のターンへの持ち越しはできません。',target:'#energybar',manual:true},
+ {title:'⑤ ターンを終了する',body:'<b>「ターン終了 → 購入フェイズ」</b>を押してください。毎ターン終了時に<b>＋5金</b>獲得します。',target:'#actions',test:()=>s.phase==='turnShop',auto:true},
+ {title:'⑥ カード（方向／特殊／駒）を購入してみよう',body:'ショップで<b>好きなカードを1枚購入</b>しましょう。<div class="pileGuide"><div><b>📚 山札</b><span>ターン開始時に上から5枚引きます。</span></div><div><b>🃏 手札</b><span>引いたカードを使って行動。使わなかったカードもターン終了時に捨てます。</span></div><div><b>🗑 捨て札</b><span>使ったカード・残りの手札・購入したカードが入ります。</span></div></div><p>山札が足りなくなったら、捨て札をシャッフルして新しい山札にします。<b>買ったカードはすぐには手札に来ません。</b></p>',target:'#shopitems',test:()=>guidePurchaseCount>0,auto:true},
+ {title:'⑦ 二歩と成りについて',body:'<b>二歩は可能です。</b>歩が縦に並んでも横に並んでも大丈夫です。<br><br>成りはありません。（成りとは、自分の駒が相手の陣地に入ったり、敵陣の中で動いたり、敵陣から出る動きをするときに、駒を裏返してパワーアップさせることです。）<br><br>相手の駒を取っても持ち駒にはなりません。',target:'#board',manual:true},
+ {title:'⑧ 第2局への引き継ぎ',body:'<b>金・デッキのカード・第1局終了時に盤上に残っていた駒</b>は第2局に引き継ぎます。第1局の敗者が第2局の先手となり、第1局の勝者は好きなカード1枚を無料獲得できます。',target:'#energybar,#handinfo,#board',manual:true},
+ {title:'⑨ 相手にターンを渡そう',body:'購入フェイズを終了して、青のターンを開始しましょう。',target:'#actions',test:()=>s.phase==='play'&&s.turn===1,auto:true},
+ {title:'チュートリアル完了！',body:'王は<b>体力2</b>。2回攻撃するとその局に勝利します。<br><br>カード名の右にある「？」で効果の詳細を確認できます。',target:'#board',manual:true}
+];
+let guideStep=-1;
+let lastGuideFlashStep=-1;
+let guideSnapshots=[];
+let tutorialWasOpened=false;
+let guidePurchaseCount=0;let guideAutoBusy=false;let tutorialSavedMatch=null;let tutorialSavedUndo=null;
+function askTutorial(){openTutorial()}
+function openTutorial(){if(onlineActive){alert('オンライン対戦中はチュートリアルを開始できません');return;}
+ // チュートリアルは独立した練習対局で実行し、元の対局を保存する。
+ tutorialSavedMatch=JSON.stringify(s);tutorialSavedUndo=undoStack.slice();guidePurchaseCount=0;guideAutoBusy=false;tutorialWasOpened=true;document.getElementById('tutorialLaunch')?.classList.add('tutorialVisited');
+ closeTutorial();closeDeckViewer();hideDrawCutin();init();hideDrawCutin();
+ // 操作練習で方向カードが引けずに詰まらないよう、手札に前進1を2枚確保する。
+ let p=s.players[0];let need=Math.max(0,2-p.hand.filter(id=>id==='f1').length);
+ for(let j=0;j<need;j++){let pos=p.deck.indexOf('f1');if(pos<0)break;let swapIdx=p.hand.findIndex(id=>id!=='f1');if(swapIdx<0)break;let old=p.hand[swapIdx];p.hand[swapIdx]='f1';p.deck[pos]=old;}
+ guideStep=0;lastGuideFlashStep=-1;guideSnapshots=[JSON.stringify(s)];document.getElementById('coachRestore').classList.add('hidden');document.getElementById('tutorialCoach').classList.remove('hidden');tutorialRefresh();
+}
+function skipTutorial(){closeTutorial();render();}
+function minimizeTutorial(){if(guideStep<0)return;document.getElementById('tutorialCoach').classList.add('hidden');document.getElementById('coachRestore').classList.remove('hidden')}
+function restoreTutorial(){if(guideStep<0)return;document.getElementById('coachRestore').classList.add('hidden');document.getElementById('tutorialCoach').classList.remove('hidden');tutorialRefresh()}
+function closeTutorial(){if(guideStep>=0&&tutorialSavedMatch){s=JSON.parse(tutorialSavedMatch);undoStack=tutorialSavedUndo||[];tutorialSavedMatch=null;tutorialSavedUndo=null;hideDrawCutin();}guideStep=-1;document.getElementById('coachRestore').classList.add('hidden');document.getElementById('tutorialCoach').classList.add('hidden');document.querySelectorAll('.guideFocus').forEach(el=>el.classList.remove('guideFocus'))}
+function tutorialNext(){
+ if(guideStep<0)return;
+ let st=guidedSteps[guideStep];if(!st.manual&&!st.test?.())return;
+ if(guideStep===guidedSteps.length-1){closeTutorial();render();return}
+ guideStep++;guideSnapshots[guideStep]=JSON.stringify(s);guideSnapshots.length=guideStep+1;tutorialRefresh();
+}
+function tutorialBack(){tutorialRestoreStep(guideStep-1)}
+function tutorialRestoreStep(index){
+ const target=Number(index);
+ if(guideStep<=0||!Number.isInteger(target)||target<0||target>=guideStep)return;
+ guideStep=target;s=JSON.parse(guideSnapshots[guideStep]);guideSnapshots.length=guideStep+1;
+ hideDrawCutin();render();tutorialRefresh();
+}
+function tutorialRefresh(){
+ if(guideStep<0)return;
+ const st=guidedSteps[guideStep];if(!st)return;
+ // 点滅はステップに入ったときだけ再起動。再描画でアニメーションがリセットされないようにする。
+ const flashStepChanged=lastGuideFlashStep!==guideStep;
+ if(flashStepChanged){
+  document.querySelectorAll('.guideFocus').forEach(el=>el.classList.remove('guideFocus'));
+  lastGuideFlashStep=guideStep;
+ }
+ document.querySelectorAll(st.target.split(',').join(',')).forEach(focus=>{
+  if([1,2,3,4,5,6,7,8].includes(guideStep)&&!focus.classList.contains('guideFocus')){
+   focus.classList.add('guideFocus');
+  }
+ });
+ document.getElementById('coachCount').textContent=(guideStep+1)+'/'+guidedSteps.length;
+ document.getElementById('coachTitle').textContent=st.title;
+ document.getElementById('coachBody').innerHTML=st.body;document.getElementById('tutorialCoach').classList.toggle('coachHigh',guideStep===5);if(guideStep===2){const e=document.getElementById('guideCardProgress');if(e)e.textContent='使用済み：'+Math.min(2,s.players[0].turnDirs)+' / 2枚';}
+ document.getElementById('coachBack').disabled=guideStep===0;
+ const next=document.getElementById('coachNext');let passed=st.manual||!!st.test?.();
+ next.disabled=!passed;next.textContent=guideStep===guidedSteps.length-1?'終了 ✓':st.auto?'操作すると自動で進みます':passed?'次へ →':'操作を待っています…';if(st.auto&&passed&&!guideAutoBusy){guideAutoBusy=true;setTimeout(()=>{guideAutoBusy=false;if(guideStep>=0&&guidedSteps[guideStep]===st&&st.test?.())tutorialNext()},160)}
+}
+// ガイド中は、指定した場所と手順以外のクリック・キー操作をブロックする。
+document.addEventListener('click',function(e){
+ if(guideStep<0)return;
+ if(e.target.closest('#tutorialCoach')||e.target.closest('#coachRestore')||e.target.closest('.tabHelp')||e.target.closest('.shophelp'))return;
+ let step=guideStep, btn=e.target.closest('button');
+ let allow=false;
+ if(step===1){const cell=btn?.closest('#board .cell');if(cell){let i=Array.from(document.querySelectorAll('#board .cell')).indexOf(cell);allow=!s.moveUsed&&((s.selected===null&&s.board[i]?.p===0&&s.board[i]?.t==='P')||(s.selected!==null&&options().includes(i)));}}
+ else if(step===2){
+  const cell=btn?.closest('#board .cell');
+  if(cell){let i=Array.from(document.querySelectorAll('#board .cell')).indexOf(cell);allow=s.activeCard?.id==='f1'&&(s.selected===null?s.board[i]?.p===0:options().includes(i)||s.board[i]?.p===0);}
+  else if(btn?.closest('#hand')){const call=btn.getAttribute('onclick')||'';let m=call.match(/playCard\((\d+)\)/);allow=!!m&&s.players[0].hand[Number(m[1])]==='f1';}
+ }
+ else if(step===4)allow=!!btn?.getAttribute('onclick')?.includes('endTurn()');
+ else if(step===8)allow=!!btn?.getAttribute('onclick')?.includes('shopDone()');
+ else if(step===5){let call=btn?.getAttribute('onclick')||'';allow=call.includes('s.shopTab=')||call.includes('buy(');}
+  
+ if(!allow){e.preventDefault();e.stopImmediatePropagation();}
+},true);
+document.addEventListener('keydown',function(e){if(guideStep>=0&&(e.key==='Escape'||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'))){e.preventDefault();e.stopImmediatePropagation()}},true);
+
+
+// 説明を画面最前面の独立レイヤーに表示する。? ボタンと重ならない位置へ調整。
+const floatingHelp=document.getElementById('cardTooltip');
+function showFloatingHelp(el){
+ if(!el||!el.dataset.help)return;
+ floatingHelp.textContent=el.dataset.help;floatingHelp.classList.remove('hidden');
+ const r=el.getBoundingClientRect();const width=floatingHelp.offsetWidth,height=floatingHelp.offsetHeight;
+ let left=Math.max(12,Math.min(window.innerWidth-width-12,r.left));
+ let top=r.bottom+10;
+ if(top+height>window.innerHeight-12)top=r.top-height-10;
+ if(top<12)top=12;
+ floatingHelp.style.left=left+'px';floatingHelp.style.top=top+'px';
+}
+document.addEventListener('mouseover',e=>{let el=e.target.closest('.cardhelp');if(el)showFloatingHelp(el)});
+document.addEventListener('mouseout',e=>{let el=e.target.closest('.cardhelp');if(el&&!el.contains(e.relatedTarget))floatingHelp.classList.add('hidden')});
+document.addEventListener('focusin',e=>{let el=e.target.closest('.cardhelp');if(el)showFloatingHelp(el)});
+document.addEventListener('focusout',e=>{if(e.target.closest('.cardhelp'))floatingHelp.classList.add('hidden')});
+document.addEventListener('click',e=>{if(e.target.closest('.cardhelp')){showFloatingHelp(e.target.closest('.cardhelp'));e.stopPropagation()}else floatingHelp.classList.add('hidden')});
+
+// オンラインモード：サーバーが部屋を管理し、手番側の操作結果を同期する。
+let onlineActive=false,onlineReceiving=false,onlineRole=-1,onlineSocket=null,onlineRoom='',onlineLastSent='',onlineSyncTimer=null,onlinePeers=0;
+function onlineStatus(t){document.getElementById('onlineStatus').textContent=t}
+function queueOnlineSync(){
+ if(onlineReceiving||!onlineActive||onlineRole!==s.turn||onlinePeers!==2)return;
+ clearTimeout(onlineSyncTimer);
+ onlineSyncTimer=setTimeout(()=>{
+  if(!onlineSocket||onlineSocket.readyState!==1||onlineReceiving)return;
+  const value=JSON.stringify(s);
+  if(value===onlineLastSent)return;
+  onlineLastSent=value;
+  onlineSocket.send(JSON.stringify({type:'state',state:s}));
+ },65);
+}
+function updateOnlineBar(){
+ document.getElementById('copyInvite').classList.toggle('hidden',!onlineActive);
+ document.getElementById('leaveOnline').classList.toggle('hidden',!onlineActive);
+ document.getElementById('roomCode').value=onlineRoom||'';
+ if(!onlineActive)return;
+ const side=onlineRole===0?'赤（先手）':onlineRole===1?'青（後手）':'観戦';
+ onlineStatus('部屋 '+onlineRoom+'｜'+side+'｜'+(onlinePeers<2?'相手の参加待ち':s.turn===onlineRole?'あなたの操作番':'相手の操作番'));
+}
+function onlineConnect(code){
+ if(onlineSocket)onlineSocket.close();
+ const proto=location.protocol==='https:'?'wss:':'ws:';
+ const ws=new WebSocket(proto+'//'+location.host+'/ws');
+ onlineSocket=ws;onlineRoom=code;onlineActive=true;onlineRole=-1;onlinePeers=0;
+ onlineStatus('接続中…');
+ ws.onopen=()=>ws.send(JSON.stringify({type:'join',room:code}));
+ ws.onmessage=e=>{
+  let m;try{m=JSON.parse(e.data)}catch{return}
+  if(m.type==='welcome'){
+   onlineRole=m.role;onlinePeers=m.peers;
+   if(m.state){onlineReceiving=true;s=m.state;undoStack=[];render();onlineReceiving=false;onlineLastSent=JSON.stringify(s)}
+   updateOnlineBar();
+  }else if(m.type==='peers'){onlinePeers=m.peers;updateOnlineBar();if(onlineRole===0&&onlinePeers===2){onlineLastSent='';queueOnlineSync()}}
+  else if(m.type==='state'){
+   clearTimeout(onlineSyncTimer);
+   onlineReceiving=true;s=m.state;undoStack=[];hideDrawCutin();render();onlineReceiving=false;
+   onlineLastSent=JSON.stringify(s);updateOnlineBar();
+  }else if(m.type==='error'){alert(m.message);leaveOnlineRoom()}
+ };
+ ws.onclose=()=>{if(onlineSocket!==ws)return;onlineActive=false;onlinePeers=0;onlineRole=-1;onlineStatus('接続が切れました。再参加してください');updateOnlineBar()};
+ ws.onerror=()=>onlineStatus('通信エラー：サーバーへの接続を確認');
+}
+function createOnlineRoom(){
+ const code=Math.random().toString(36).slice(2,8).toUpperCase();
+ history.replaceState(null,'',location.pathname+'?room='+code);
+ onlineConnect(code);
+}
+function joinOnlineRoom(){
+ const code=document.getElementById('roomCode').value.trim().toUpperCase();
+ if(!/^[A-Z0-9]{4,12}$/.test(code)){alert('部屋番号を4〜12文字で入力してください');return}
+ history.replaceState(null,'',location.pathname+'?room='+code);
+ onlineConnect(code);
+}
+function copyOnlineInvite(){
+ const link=location.origin+location.pathname+'?room='+encodeURIComponent(onlineRoom);
+ navigator.clipboard.writeText(link).then(()=>alert('招待URLをコピーしました')).catch(()=>prompt('このURLを相手に送ってください',link));
+}
+function leaveOnlineRoom(){
+ if(onlineSocket){let w=onlineSocket;onlineSocket=null;w.close()}
+ onlineActive=false;onlineRole=-1;onlinePeers=0;onlineRoom='';onlineLastSent='';
+ history.replaceState(null,'',location.pathname);onlineStatus('未接続（ローカル操作）');updateOnlineBar();
+}
+document.addEventListener('click',e=>{
+ if(!onlineActive)return;
+ if(e.target.closest('#onlineBar'))return;
+ if(e.target.closest('#cardTooltip')||e.target.closest('.cardhelp')||e.target.closest('#deckOverlay'))return;
+ if(e.target.closest('#bgmToggle')||e.target.closest('#deckViewerTitle'))return;
+ if(e.target.closest('#tutorialCoach')||e.target.closest('#coachRestore')){e.preventDefault();e.stopImmediatePropagation();return}
+ const gameAction=e.target.closest('button');
+ if(gameAction&&(onlinePeers!==2||onlineRole!==s.turn)){
+  e.preventDefault();e.stopImmediatePropagation();
+  onlineStatus(onlinePeers<2?'相手の参加を待っています':'相手の操作番です');return;
+ }
+},true);
+document.addEventListener('keydown',e=>{if(onlineActive&&(e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.stopImmediatePropagation()}},true);
+init();
+const requestedRoom=new URLSearchParams(location.search).get('room');
+if(requestedRoom&&/^[a-zA-Z0-9]{4,12}$/.test(requestedRoom))onlineConnect(requestedRoom.toUpperCase());
+setTimeout(()=>{try{if(!onlineActive&&!sessionStorage.getItem('sandoTutorialPrompted')){sessionStorage.setItem('sandoTutorialPrompted','1');if(confirm('初心者チュートリアルを始めますか？'))openTutorial()}}catch(e){}},350);
+</script></body></html>
