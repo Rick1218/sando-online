@@ -96,7 +96,8 @@ header h1{font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif CJK JP","No
  .purchaseHistory{background:#54451b;border-left:4px solid #fbd56e;padding:6px 8px;border-radius:4px;color:#fff1a9;font-weight:700}
  .kingHelp{position:absolute;right:2px;bottom:2px;z-index:3;transform:none!important}
 </style></head><body><div id="onlineBar">
-<strong>🌐 2人オンライン対戦</strong>
+<strong>🎮 対戦モード</strong>
+<button id="soloModeBtn" onclick="startSoloMode()">👤 1人で赤・青を操作</button>
 <input id="roomCode" placeholder="部屋番号" maxlength="12" aria-label="部屋番号">
 <button onclick="createOnlineRoom()">部屋を作る</button>
 <button onclick="joinOnlineRoom()">部屋に参加</button>
@@ -486,11 +487,11 @@ document.addEventListener('click',function(e){
  if(e.target.closest('#tutorialCoach')||e.target.closest('#coachRestore')||e.target.closest('.tabHelp')||e.target.closest('.shophelp'))return;
  let step=guideStep, btn=e.target.closest('button');
  let allow=false;
- if(step===1){const cell=btn?.closest('#board .cell');if(cell){let i=Array.from(document.querySelectorAll('#board .cell')).indexOf(cell);allow=!s.moveUsed&&((s.selected===null&&s.board[i]?.p===0&&s.board[i]?.t==='P')||(s.selected!==null&&options().includes(i)));}}
+ if(step===1){const cell=btn?.closest('#board .cell');if(cell){let i=Array.from(document.querySelectorAll('#board .cell')).indexOf(cell);allow=!s.moveUsed&&((s.selected===null&&s.board[i]?.p===1&&s.board[i]?.t==='P')||(s.selected!==null&&options().includes(i)));}}
  else if(step===2){
   const cell=btn?.closest('#board .cell');
-  if(cell){let i=Array.from(document.querySelectorAll('#board .cell')).indexOf(cell);allow=s.activeCard?.id==='f1'&&(s.selected===null?s.board[i]?.p===0:options().includes(i)||s.board[i]?.p===0);}
-  else if(btn?.closest('#hand')){const call=btn.getAttribute('onclick')||'';let m=call.match(/playCard\((\d+)\)/);allow=!!m&&s.players[0].hand[Number(m[1])]==='f1';}
+  if(cell){let i=Array.from(document.querySelectorAll('#board .cell')).indexOf(cell);allow=s.activeCard?.id==='f1'&&(s.selected===null?s.board[i]?.p===1:options().includes(i)||s.board[i]?.p===1);}
+  else if(btn?.closest('#hand')){const call=btn.getAttribute('onclick')||'';let m=call.match(/playCard\((\d+)\)/);allow=!!m&&s.players[1].hand[Number(m[1])]==='f1';}
  }
  else if(step===4)allow=!!btn?.getAttribute('onclick')?.includes('endTurn()');
  else if(step===8)allow=!!btn?.getAttribute('onclick')?.includes('shopDone()');
@@ -552,7 +553,7 @@ function onlineConnect(code){
  const proto=location.protocol==='https:'?'wss:':'ws:';
  const ws=new WebSocket(proto+'//'+location.host+'/ws');
  onlineSocket=ws;onlineRoom=code;onlineActive=true;onlineRole=-1;onlinePeers=0;onlineAuthorityTurn=0;
- onlineStatus('接続中…');
+ document.getElementById('soloModeBtn').textContent='👤 1人で赤・青を操作';onlineStatus('接続中…');
  ws.onopen=()=>ws.send(JSON.stringify({type:'join',room:code,token:sessionStorage.getItem('sando-room-token-'+code)||''}));
  ws.onmessage=e=>{
   let m;try{m=JSON.parse(e.data)}catch{return}
@@ -575,6 +576,7 @@ function createOnlineRoom(){
  history.replaceState(null,'',location.pathname+'?room='+code);
  onlineConnect(code);
 }
+function startSoloMode(){if(onlineActive)leaveOnlineRoom();else{init();onlineStatus('1人回し中：赤・青を交互に操作できます');}document.getElementById('soloModeBtn').textContent='👤 1人回し中';}
 function joinOnlineRoom(){
  const code=document.getElementById('roomCode').value.trim().toUpperCase();
  if(!/^[A-Z0-9]{4,12}$/.test(code)){alert('部屋番号を4〜12文字で入力してください');return}
@@ -589,7 +591,7 @@ function leaveOnlineRoom(){
  onlineManualLeave=true;clearTimeout(onlineReconnectTimer);
  if(onlineSocket){let w=onlineSocket;onlineSocket=null;w.close()}
  onlineActive=false;onlineRole=-1;onlinePeers=0;onlineRoom='';onlineLastSent='';onlineAuthorityTurn=0;
- history.replaceState(null,'',location.pathname);onlineStatus('未接続（1台で赤・青を操作できます）');updateOnlineBar();
+ history.replaceState(null,'',location.pathname);onlineStatus('1人回し中：赤・青を交互に操作できます');document.getElementById('soloModeBtn').textContent='👤 1人回し中';updateOnlineBar();
 }
 document.addEventListener('click',e=>{
  if(!onlineActive)return;
