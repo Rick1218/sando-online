@@ -441,6 +441,7 @@ function openTutorial(){if(onlineActive){alert('オンライン対戦中はチ�
  // 操作練習で方向カードが引けずに詰まらないよう、手札に前進1を2枚確保する。
  s.turn=1;s.players[1].turns=1;s.energy=s.players[1].maxEnergy;draw(1,5);let p=s.players[1];let need=Math.max(0,2-p.hand.filter(id=>id==='f1').length);
  for(let j=0;j<need;j++){let pos=p.deck.indexOf('f1');if(pos<0)break;let swapIdx=p.hand.findIndex(id=>id!=='f1');if(swapIdx<0)break;let old=p.hand[swapIdx];p.hand[swapIdx]='f1';p.deck[pos]=old;}
+ s.selected=null;s.activeCard=null;s.mode='normal';s.moveUsed=false;render();
  guideStep=0;lastGuideFlashStep=-1;guideSnapshots=[JSON.stringify(s)];document.getElementById('coachRestore').classList.add('hidden');document.getElementById('tutorialCoach').classList.remove('hidden');tutorialRefresh();
 }
 function skipTutorial(){closeTutorial();render();}
@@ -487,9 +488,9 @@ document.addEventListener('click',function(e){
  if(e.target.closest('#tutorialCoach')||e.target.closest('#coachRestore')||e.target.closest('.tabHelp')||e.target.closest('.shophelp'))return;
  let step=guideStep, btn=e.target.closest('button');
  let allow=false;
- if(step===1){const cell=btn?.closest('#board .cell');if(cell){let i=Array.from(document.querySelectorAll('#board .cell')).indexOf(cell);allow=!s.moveUsed&&((s.selected===null&&s.board[i]?.p===1&&s.board[i]?.t==='P')||(s.selected!==null&&options().includes(i)));}}
+ if(step===1){const cell=e.target.closest('#board .cell');if(cell){let i=Array.from(document.querySelectorAll('#board .cell')).indexOf(cell);allow=!s.moveUsed&&((s.selected===null&&s.board[i]?.p===1&&s.board[i]?.t==='P'&&legalPiece(s.board[i],i).length>0)||(s.selected!==null&&options().includes(i)));}}
  else if(step===2){
-  const cell=btn?.closest('#board .cell');
+  const cell=e.target.closest('#board .cell');
   if(cell){let i=Array.from(document.querySelectorAll('#board .cell')).indexOf(cell);allow=s.activeCard?.id==='f1'&&(s.selected===null?s.board[i]?.p===1:options().includes(i)||s.board[i]?.p===1);}
   else if(btn?.closest('#hand')){const call=btn.getAttribute('onclick')||'';let m=call.match(/playCard\((\d+)\)/);allow=!!m&&s.players[1].hand[Number(m[1])]==='f1';}
  }
